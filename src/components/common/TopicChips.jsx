@@ -2,21 +2,10 @@
 import React from 'react';
 
 const topics = [
-  'All',
-  'User interface design',
-  'Graphic design',
-  'Visual Effects',
-  'HTML',
-  'Gaming',
-  'Apple',
-  'Filmmaking',
-  'Startup company',
-  'No-code',
-  'Figma',
-  'Web design',
-  'UI trends 2026',
-  'Animations',
-  'Webflow',
+  'For you',
+  'Trending',
+  'Earning Tips'
+  
 ];
 
 export default function TopicChips() {

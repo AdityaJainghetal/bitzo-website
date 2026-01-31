@@ -1,25 +1,4 @@
-// import { useState } from 'react'
-// import { Outlet } from 'react-router-dom'
-// import Navbar from '../common/Navbar'
-// import Sidebar from '../common/Sidebar'
 
-// export default function MainLayout() {
-//   const [sidebarOpen, setSidebarOpen] = useState(false)
-
-//   const toggleSidebar = () => setSidebarOpen(prev => !prev)
-
-//   return (
-//     <div className="bg-[#0f0f0f] min-h-screen text-white font-sans">
-//       <Navbar toggleSidebar={toggleSidebar} />
-
-//       <Sidebar isOpen={sidebarOpen} />
-
-//       <main className={`pt-14 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-16'}`}>
-//         <Outlet />  {/* All page content renders here */}
-//       </main>
-//     </div>
-//   )
-// }
 
 // src/layouts/MainLayout.jsx
 import { useState } from 'react';

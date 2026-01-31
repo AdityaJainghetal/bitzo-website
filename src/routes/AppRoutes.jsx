@@ -6,6 +6,11 @@ import Trending from '../pages/Trending'
 import WatchPage from '../components/common/WatchPage'
 import NotFound from '../pages/NotFound'
 import WithdrawPage from '../components/common/WithdrawPage'
+import UploadVideo from '../pages/UploadVideo/UploadVideoScreen'
+// import MyVideos from '../pages/UploadVideo/MyVideos'
+import Profile from '../pages/MyProfile'
+import ReelPlayerPage from '../components/common/ReelPlayerPage'
+import FullVideo from '../pages/UploadVideo/FullVideo'
 
 export default function AppRoutes() {
   return (
@@ -16,6 +21,13 @@ export default function AppRoutes() {
         <Route path="trending" element={<Trending />} />
         <Route path="/watch/:id" element={<WatchPage />} />
         <Route path="/withdraw" element={<WithdrawPage/>} />
+        <Route path="/uploadvideo" element={<UploadVideo/>} />
+        <Route path="/reel" element={<ReelPlayerPage />} />
+        <Route path="/fullvideo/:id" element={<FullVideo />} />
+        {/* <Route path="/profile" element={<MyVideos/>} /> */}
+        <Route path="/profile" element={<Profile/>} />
+
+        
         {/* Add more routes like /watch/:id, /channel/:id later */}
       </Route>
 
