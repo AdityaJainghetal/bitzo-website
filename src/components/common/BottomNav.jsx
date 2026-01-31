@@ -54,7 +54,7 @@ const bottomItems = [
   { icon: Home, label: 'Home', path: '/', active: true },
   { icon: Flame, label: 'Shorts', path: '/shorts' },
   { icon: Plus, label: '', path: '/uploadvideo', isCenter: true }, // special center button
-  { icon: MonitorSpeakerIcon, label: 'Earn More', path: '/earnmore' },
+  { icon: MonitorSpeakerIcon, label: 'Earn More', path: '/' },
   { icon: User, label: 'You', path: '/profile' },
 ];
 

@@ -81,10 +81,7 @@ export default function FullVideo() {
         </button>
       </header>
 
-      {/* ========================================================
-           HERO VIDEO — full-width, viewport-height on mobile,
-           capped at 720px on desktop
-          ======================================================== */}
+ 
       <section
         className="relative w-full"
         style={{ height: "100vh", maxHeight: "720px" }}
@@ -146,9 +143,6 @@ export default function FullVideo() {
         </div>
       </section>
 
-      {/* ========================================================
-           LIKE / COMMENT / SHARE BAR
-          ======================================================== */}
       <section
         className="flex items-center justify-around flex-wrap gap-y-3"
         style={{ background: "#111111", padding: "20px 24px" }}
