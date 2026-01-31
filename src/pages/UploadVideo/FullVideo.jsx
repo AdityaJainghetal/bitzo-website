@@ -1,314 +1,806 @@
-import { useState } from "react";
+
+
+
+// import { useState, useRef, useEffect } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import {
+//   ArrowLeft,
+//   ThumbsUp,
+//   MessageSquare,
+//   Share2,
+//   Play,
+//   Pause,
+//   Volume2,
+//   VolumeX,
+//   MoreHorizontal,
+//   Grid,
+//   X,
+//   Send,
+// } from "lucide-react";
+
+// /* ───────── VIDEO POOL ───────── */
+// const VIDEO_POOL = [
+//   {
+//     video: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+//     poster:
+//       "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
+//   },
+//   {
+//     video: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+//     poster:
+//       "https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
+//   },
+// ];
+
+// /* ───────── RECOMMENDED VIDEOS ───────── */
+// const RECOMMENDED_VIDEOS = [
+//   { id: 2, title: "Sintel Short Film", creator: "@studio" },
+//   { id: 3, title: "Nature Documentary", creator: "@nature" },
+//   { id: 4, title: "Amazing Wildlife", creator: "@wildlife" },
+// ];
+
+// function getVideoEntry(id) {
+//   const num =
+//     typeof id === "number"
+//       ? id
+//       : String(id)
+//           .split("")
+//           .reduce((a, c) => a + c.charCodeAt(0), 0);
+//   return VIDEO_POOL[num % VIDEO_POOL.length];
+// }
+
+// export default function FullVideo() {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const videoData = location.state?.video || { id: 1 };
+
+//   const [playing, setPlaying] = useState(true);
+//   const [muted, setMuted] = useState(false);
+//   const [liked, setLiked] = useState(false);
+//   const [showControls, setShowControls] = useState(false);
+//   const [showComments, setShowComments] = useState(false);
+
+//   const [watchTime, setWatchTime] = useState(0);
+//   const [duration, setDuration] = useState(0);
+
+//   const videoRef = useRef(null);
+//   const hideTimer = useRef(null);
+
+//   const entry = getVideoEntry(videoData.id);
+
+//   /* ───────── PLAY / PAUSE ───────── */
+//   useEffect(() => {
+//     const v = videoRef.current;
+//     if (!v) return;
+
+//     v.load();
+//     playing ? v.play().catch(() => {}) : v.pause();
+//   }, [playing, entry.video]);
+
+//   /* ───────── WATCH TRACK ───────── */
+//   useEffect(() => {
+//     const v = videoRef.current;
+//     if (!v) return;
+
+//     const onTime = () => setWatchTime(v.currentTime);
+//     const onMeta = () => setDuration(v.duration || 0);
+
+//     v.addEventListener("timeupdate", onTime);
+//     v.addEventListener("loadedmetadata", onMeta);
+
+//     return () => {
+//       v.removeEventListener("timeupdate", onTime);
+//       v.removeEventListener("loadedmetadata", onMeta);
+//     };
+//   }, [entry.video]);
+
+//   const watchedPercent =
+//     duration > 0 ? Math.min((watchTime / duration) * 100, 100) : 0;
+
+//   const handleTap = () => {
+//     setShowControls(true);
+//     clearTimeout(hideTimer.current);
+//     hideTimer.current = setTimeout(() => {
+//       if (playing) setShowControls(false);
+//     }, 2000);
+//   };
+
+//   const openRecommendedVideo = (video) => {
+//     navigate("/full-video", {
+//       state: { video },
+//       replace: true,
+//     });
+//     setPlaying(true);
+//   };
+
+//   return (
+//     <div className="bg-black text-white min-h-screen">
+//       {/* HEADER */}
+//       <header className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-5 py-4 bg-gradient-to-b from-black/80 to-transparent">
+//         <button onClick={() => navigate(-1)}>
+//           <ArrowLeft size={22} />
+//         </button>
+//         <Grid size={20} />
+//       </header>
+
+//       {/* VIDEO */}
+//       <section className="relative h-screen" onClick={handleTap}>
+//         <video
+//           ref={videoRef}
+//           src={entry.video}
+//           poster={entry.poster}
+//           muted={muted}
+//           loop
+//           playsInline
+//           className="absolute inset-0 w-full h-full object-cover"
+//         />
+
+//         {showControls && (
+//           <button
+//             onClick={() => setPlaying(!playing)}
+//             className="absolute inset-0 flex items-center justify-center z-20"
+//           >
+//             <div className="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center">
+//               {playing ? <Pause size={30} /> : <Play size={30} />}
+//             </div>
+//           </button>
+//         )}
+
+//         {showControls && (
+//           <button
+//             onClick={() => setMuted(!muted)}
+//             className="absolute top-24 right-6 z-30 bg-black/60 p-2 rounded-full"
+//           >
+//             {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+//           </button>
+//         )}
+
+//         <div className="absolute bottom-28 left-6 z-20">
+//           <h1 className="text-2xl font-bold">
+//             {videoData.title || "Amazing Video"}
+//           </h1>
+//           <p className="text-sm text-gray-300">
+//             {videoData.creator || "@creator"}
+//           </p>
+//         </div>
+//       </section>
+
+//       {/* ACTION BAR */}
+//       <section className="bg-[#111] px-6 py-5 flex justify-around">
+//         <div className="flex flex-col items-center">
+//           <button
+//             onClick={() => setLiked(!liked)}
+//             className="w-11 h-11 rounded-full flex items-center justify-center bg-white/10"
+//           >
+//             <ThumbsUp
+//               size={20}
+//               color={liked ? "#ff4d4d" : "#ccc"}
+//               fill={liked ? "#ff4d4d" : "none"}
+//             />
+//           </button>
+//           <span className="text-sm mt-1">Like</span>
+//           <span className="text-xs text-gray-400">
+//             {watchedPercent.toFixed(0)}% watched
+//           </span>
+//         </div>
+
+//         <div
+//           className="flex flex-col items-center cursor-pointer"
+//           onClick={() => setShowComments(true)}
+//         >
+//           <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+//             <MessageSquare size={20} />
+//           </div>
+//           <span className="text-sm mt-1">Comment</span>
+//         </div>
+
+//         <div className="flex flex-col items-center cursor-pointer">
+//           <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+//             <Share2 size={20} />
+//           </div>
+//           <span className="text-sm mt-1">Share</span>
+//         </div>
+
+//         <div className="flex flex-col items-center">
+//           <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+//             <MoreHorizontal size={20} />
+//           </div>
+//           <span className="text-sm mt-1">More</span>
+//         </div>
+//       </section>
+
+//       {/* RECOMMENDED VIDEOS */}
+//       <section className="bg-black px-5 py-6">
+//         <h2 className="text-lg font-semibold mb-4">Recommended Videos</h2>
+
+//         <div className="space-y-4">
+//           {RECOMMENDED_VIDEOS.map((vid) => {
+//             const rec = getVideoEntry(vid.id);
+//             return (
+//               <div
+//                 key={vid.id}
+//                 onClick={() => openRecommendedVideo(vid)}
+//                 className="flex gap-4 cursor-pointer"
+//               >
+//                 <img
+//                   src={rec.poster}
+//                   className="w-32 h-20 rounded-lg object-cover"
+//                 />
+//                 <div>
+//                   <h3 className="text-sm font-semibold">{vid.title}</h3>
+//                   <p className="text-xs text-gray-400">{vid.creator}</p>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       </section>
+
+//       {/* COMMENTS */}
+//       {showComments && (
+//         <div className="fixed inset-0 z-50 bg-black/70 flex items-end">
+//           <div className="bg-[#111] rounded-t-2xl p-4 h-[60%] w-full">
+//             <div className="flex justify-between items-center mb-3">
+//               <h3 className="font-semibold">Comments</h3>
+//               <button onClick={() => setShowComments(false)}>
+//                 <X />
+//               </button>
+//             </div>
+
+//             <div className="flex-1 text-gray-400 text-sm">
+//               No comments yet
+//             </div>
+
+//             <div className="flex gap-2 mt-3">
+//               <input
+//                 placeholder="Add a comment..."
+//                 className="flex-1 bg-black/40 rounded-full px-4 py-2 text-sm outline-none"
+//               />
+//               <button className="p-2 rounded-full bg-blue-500">
+//                 <Send size={18} />
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
+// import { useState, useRef, useEffect } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import {
+//   ArrowLeft,
+//   ThumbsUp,
+//   MessageSquare,
+//   Share2,
+//   Play,
+//   Pause,
+//   Volume2,
+//   VolumeX,
+//   MoreHorizontal,
+//   Grid,
+//   X,
+//   Send,
+// } from "lucide-react";
+
+// /* ───────── VIDEO POOL ───────── */
+// const VIDEO_POOL = [
+//   {
+//     video: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+//     poster:
+//       "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
+//   },
+//   {
+//     video: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+//     poster:
+//       "https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
+//   },
+// ];
+
+// /* ───────── RECOMMENDED VIDEOS ───────── */
+// const RECOMMENDED_VIDEOS = [
+//   { id: 2, title: "Sintel Short Film", creator: "@studio" },
+//   { id: 3, title: "Nature Documentary", creator: "@nature" },
+//   { id: 4, title: "Amazing Wildlife", creator: "@wildlife" },
+// ];
+
+// function getVideoEntry(id) {
+//   const num =
+//     typeof id === "number"
+//       ? id
+//       : String(id)
+//           .split("")
+//           .reduce((a, c) => a + c.charCodeAt(0), 0);
+//   return VIDEO_POOL[num % VIDEO_POOL.length];
+// }
+
+// export default function FullVideo() {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const videoData = location.state?.video || { id: 1 };
+
+//   const [playing, setPlaying] = useState(true);
+//   const [muted, setMuted] = useState(false);
+//   const [liked, setLiked] = useState(false);
+//   const [showControls, setShowControls] = useState(false);
+//   const [showComments, setShowComments] = useState(false);
+
+//   const [watchTime, setWatchTime] = useState(0);
+//   const [duration, setDuration] = useState(0);
+
+//   const videoRef = useRef(null);
+//   const hideTimer = useRef(null);
+
+//   const entry = getVideoEntry(videoData.id);
+
+//   /* ───────── PLAY / PAUSE ───────── */
+//   useEffect(() => {
+//     const v = videoRef.current;
+//     if (!v) return;
+
+//     v.load();
+//     playing ? v.play().catch(() => {}) : v.pause();
+//   }, [playing, entry.video]);
+
+//   /* ───────── WATCH TRACK ───────── */
+//   useEffect(() => {
+//     const v = videoRef.current;
+//     if (!v) return;
+
+//     const onTime = () => setWatchTime(v.currentTime);
+//     const onMeta = () => setDuration(v.duration || 0);
+
+//     v.addEventListener("timeupdate", onTime);
+//     v.addEventListener("loadedmetadata", onMeta);
+
+//     return () => {
+//       v.removeEventListener("timeupdate", onTime);
+//       v.removeEventListener("loadedmetadata", onMeta);
+//     };
+//   }, [entry.video]);
+
+//   const watchedPercent =
+//     duration > 0 ? Math.min((watchTime / duration) * 100, 100) : 0;
+
+//   const handleTap = () => {
+//     setShowControls(true);
+//     clearTimeout(hideTimer.current);
+//     hideTimer.current = setTimeout(() => {
+//       if (playing) setShowControls(false);
+//     }, 2000);
+//   };
+
+//   const openRecommendedVideo = (video) => {
+//     navigate("/fullvideo", {
+//       state: { video },
+//       replace: true,
+//     });
+//     setPlaying(true);
+//   };
+
+//   return (
+//     <div className="bg-black text-white min-h-screen">
+//       {/* HEADER */}
+//       <header className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-5 py-4 bg-gradient-to-b from-black/80 to-transparent">
+//         <button onClick={() => navigate(-1)}>
+//           <ArrowLeft size={22} />
+//         </button>
+//         <Grid size={20} />
+//       </header>
+
+//       {/* VIDEO */}
+//       <section className="relative h-screen" onClick={handleTap}>
+//         <video
+//           key={entry.video}                 // ⭐ FIX HERE
+//           ref={videoRef}
+//           src={entry.video}
+//           poster={entry.poster}
+//           muted={muted}
+//           loop
+//           autoPlay
+//           playsInline
+//           className="absolute inset-0 w-full h-full object-cover"
+//         />
+
+//         {showControls && (
+//           <button
+//             onClick={() => setPlaying(!playing)}
+//             className="absolute inset-0 flex items-center justify-center z-20"
+//           >
+//             <div className="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center">
+//               {playing ? <Pause size={30} /> : <Play size={30} />}
+//             </div>
+//           </button>
+//         )}
+
+//         {showControls && (
+//           <button
+//             onClick={() => setMuted(!muted)}
+//             className="absolute top-24 right-6 z-30 bg-black/60 p-2 rounded-full"
+//           >
+//             {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+//           </button>
+//         )}
+
+//         <div className="absolute bottom-28 left-6 z-20">
+//           <h1 className="text-2xl font-bold">
+//             {videoData.title || "Amazing Video"}
+//           </h1>
+//           <p className="text-sm text-gray-300">
+//             {videoData.creator || "@creator"}
+//           </p>
+//         </div>
+//       </section>
+
+//       {/* ACTION BAR */}
+//       <section className="bg-[#111] px-6 py-5 flex justify-around">
+//         <div className="flex flex-col items-center">
+//           <button
+//             onClick={() => setLiked(!liked)}
+//             className="w-11 h-11 rounded-full flex items-center justify-center bg-white/10"
+//           >
+//             <ThumbsUp
+//               size={20}
+//               color={liked ? "#ff4d4d" : "#ccc"}
+//               fill={liked ? "#ff4d4d" : "none"}
+//             />
+//           </button>
+//           <span className="text-sm mt-1">Like</span>
+//           <span className="text-xs text-gray-400">
+//             {watchedPercent.toFixed(0)}% watched
+//           </span>
+//         </div>
+
+//         <div
+//           className="flex flex-col items-center cursor-pointer"
+//           onClick={() => setShowComments(true)}
+//         >
+//           <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+//             <MessageSquare size={20} />
+//           </div>
+//           <span className="text-sm mt-1">Comment</span>
+//         </div>
+
+//         <div className="flex flex-col items-center cursor-pointer">
+//           <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+//             <Share2 size={20} />
+//           </div>
+//           <span className="text-sm mt-1">Share</span>
+//         </div>
+
+//         <div className="flex flex-col items-center">
+//           <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+//             <MoreHorizontal size={20} />
+//           </div>
+//           <span className="text-sm mt-1">More</span>
+//         </div>
+//       </section>
+
+//       {/* RECOMMENDED VIDEOS */}
+//       <section className="bg-black px-5 py-6">
+//         <h2 className="text-lg font-semibold mb-4">Recommended Videos</h2>
+
+//         <div className="space-y-4">
+//           {RECOMMENDED_VIDEOS.map((vid) => {
+//             const rec = getVideoEntry(vid.id);
+//             return (
+//               <div
+//                 key={vid.id}
+//                 onClick={() => openRecommendedVideo(vid)}
+//                 className="flex gap-4 cursor-pointer"
+//               >
+//                 <img
+//                   src={rec.poster}
+//                   className="w-32 h-20 rounded-lg object-cover"
+//                 />
+//                 <div>
+//                   <h3 className="text-sm font-semibold">{vid.title}</h3>
+//                   <p className="text-xs text-gray-400">{vid.creator}</p>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       </section>
+
+//       {/* COMMENTS */}
+//       {showComments && (
+//         <div className="fixed inset-0 z-50 bg-black/70 flex items-end">
+//           <div className="bg-[#111] rounded-t-2xl p-4 h-[60%] w-full">
+//             <div className="flex justify-between items-center mb-3">
+//               <h3 className="font-semibold">Comments</h3>
+//               <button onClick={() => setShowComments(false)}>
+//                 <X />
+//               </button>
+//             </div>
+
+//             <div className="flex-1 text-gray-400 text-sm">
+//               No comments yet
+//             </div>
+
+//             <div className="flex gap-2 mt-3">
+//               <input
+//                 placeholder="Add a comment..."
+//                 className="flex-1 bg-black/40 rounded-full px-4 py-2 text-sm outline-none"
+//               />
+//               <button className="p-2 rounded-full bg-blue-500">
+//                 <Send size={18} />
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   ThumbsUp,
   MessageSquare,
   Share2,
   Play,
-  ChevronRight,
+  Pause,
+  Volume2,
+  VolumeX,
   MoreHorizontal,
   Grid,
+  X,
+  Send,
 } from "lucide-react";
 
-const suggestedVideos = [
+/* ───────── VIDEO POOL ───────── */
+const VIDEO_POOL = [
   {
-    id: 1,
-    views: "9.00",
-    thumbnail:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=260&fit=crop",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    poster:
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
   },
   {
-    id: 2,
-    views: "1.00",
-    thumbnail:
-      "https://images.unsplash.com/photo-1494783160278-93b2a2027a02?w=400&h=260&fit=crop",
-  },
-  {
-    id: 3,
-    views: "9.00",
-    thumbnail:
-      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=260&fit=crop",
-  },
-  {
-    id: 4,
-    views: "4.20",
-    thumbnail:
-      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=260&fit=crop",
-  },
-  {
-    id: 5,
-    views: "12.5",
-    thumbnail:
-      "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&h=260&fit=crop",
-  },
-  {
-    id: 6,
-    views: "3.10",
-    thumbnail:
-      "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=260&fit=crop",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+    poster:
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
   },
 ];
 
+/* ───────── RECOMMENDED VIDEOS ───────── */
+const RECOMMENDED_VIDEOS = [
+  { id: 2, title: "Sintel Short Film", creator: "@studio" },
+  { id: 3, title: "Nature Documentary", creator: "@nature" },
+  { id: 4, title: "Amazing Wildlife", creator: "@wildlife" },
+];
+
+function getVideoEntry(id) {
+  const num =
+    typeof id === "number"
+      ? id
+      : String(id)
+          .split("")
+          .reduce((a, c) => a + c.charCodeAt(0), 0);
+  return VIDEO_POOL[num % VIDEO_POOL.length];
+}
+
 export default function FullVideo() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const videoData = location.state?.video || { id: 1 };
+
+  const [playing, setPlaying] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [showControls, setShowControls] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+
+  const [watchTime, setWatchTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const videoRef = useRef(null);
+  const hideTimer = useRef(null);
+
+  const entry = getVideoEntry(videoData.id);
+
+  /* ───────── PLAY / PAUSE ───────── */
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    v.load();
+    playing ? v.play().catch(() => {}) : v.pause();
+  }, [playing, entry.video]);
+
+  /* ───────── WATCH TRACK ───────── */
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    const onTime = () => setWatchTime(v.currentTime);
+    const onMeta = () => setDuration(v.duration || 0);
+
+    v.addEventListener("timeupdate", onTime);
+    v.addEventListener("loadedmetadata", onMeta);
+
+    return () => {
+      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener("loadedmetadata", onMeta);
+    };
+  }, [entry.video]);
+
+  const watchedPercent =
+    duration > 0 ? Math.min((watchTime / duration) * 100, 100) : 0;
+
+  const handleTap = () => {
+    setShowControls(true);
+    clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => {
+      if (playing) setShowControls(false);
+    }, 2000);
+  };
+
+  /* ───────── OPEN RECOMMENDED VIDEO ───────── */
+  const openRecommendedVideo = (video) => {
+    // Update state for clicked video
+    navigate(`/fullvideo/${video.id}`, { state: { video }, replace: true });
+    setPlaying(true);
+    setWatchTime(0);
+  };
 
   return (
-    <div
-      style={{
-        background: "#0a0a0a",
-        minHeight: "100vh",
-        color: "#fff",
-        fontFamily: "'Segoe UI', sans-serif",
-      }}
-    >
-      {/* ========================================================
-           FIXED TOP NAVBAR
-          ======================================================== */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%)",
-          padding: "18px 28px",
-          height: "68px",
-        }}
-      >
-        <button className="text-white hover:opacity-60 transition-opacity">
-          <ArrowLeft size={24} strokeWidth={2} />
+    <div className="bg-black text-white min-h-screen">
+      {/* HEADER */}
+      <header className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-5 py-4 bg-gradient-to-b from-black/80 to-transparent">
+        <button onClick={() => navigate(-1)}>
+          <ArrowLeft size={22} />
         </button>
-        <button className="text-white hover:opacity-60 transition-opacity">
-          <Grid size={22} strokeWidth={1.8} />
-        </button>
+        <Grid size={20} />
       </header>
 
- 
-      <section
-        className="relative w-full"
-        style={{ height: "100vh", maxHeight: "720px" }}
-      >
-        {/* BG Image */}
-        <img
-          src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&h=900&fit=crop"
-          alt="Amazing Hill Trekking"
+      {/* VIDEO */}
+      <section className="relative h-screen" onClick={handleTap}>
+        <video
+          key={videoData.id} // ⭐ important: force re-mount on video change
+          ref={videoRef}
+          src={entry.video}
+          poster={entry.poster}
+          muted={muted}
+          loop
+          autoPlay
+          playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        {/* Bottom-heavy gradient */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.08) 60%, transparent 80%)",
-          }}
-        />
-
-        {/* Content wrapper */}
-        <div
-          className="relative z-10 flex flex-col justify-end w-full h-full"
-          style={{ padding: "0 28px 36px" }}
-        >
-          {/* --- Title + meta row --- */}
-          <div
-            className="flex items-start justify-between"
-            style={{ width: "100%" }}
+        {showControls && (
+          <button
+            onClick={() => setPlaying(!playing)}
+            className="absolute inset-0 flex items-center justify-center z-20"
           >
-            <div>
-              <h1
-                style={{
-                  fontSize: "clamp(22px, 5vw, 34px)",
-                  fontWeight: 700,
-                  lineHeight: 1.25,
-                }}
-              >
-                Amazing Hill Trekking
-              </h1>
-              <div className="flex flex-wrap items-center gap-2" style={{ marginTop: "8px" }}>
-                <span style={{ color: "#ccc", fontSize: "14px", fontWeight: 500 }}>
-                  TravelGuru
-                </span>
-                <span style={{ color: "#555" }}>•</span>
-                <span style={{ color: "#ccc", fontSize: "14px" }}>124k views</span>
-                <span style={{ color: "#555" }}>•</span>
-                <span style={{ color: "#ccc", fontSize: "14px" }}>2 days ago</span>
-              </div>
+            <div className="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center">
+              {playing ? <Pause size={30} /> : <Play size={30} />}
             </div>
+          </button>
+        )}
 
-            <button
-              className="text-white hover:opacity-60 transition-opacity"
-              style={{ marginTop: "2px" }}
-            >
-              <MoreHorizontal size={22} strokeWidth={2} />
-            </button>
-          </div>
+        {showControls && (
+          <button
+            onClick={() => setMuted(!muted)}
+            className="absolute top-24 right-6 z-30 bg-black/60 p-2 rounded-full"
+          >
+            {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+          </button>
+        )}
+
+        <div className="absolute bottom-28 left-6 z-20">
+          <h1 className="text-2xl font-bold">
+            {videoData.title || "Amazing Video"}
+          </h1>
+          <p className="text-sm text-gray-300">
+            {videoData.creator || "@creator"}
+          </p>
         </div>
       </section>
 
-      <section
-        className="flex items-center justify-around flex-wrap gap-y-3"
-        style={{ background: "#111111", padding: "20px 24px" }}
-      >
-        {/* Like */}
-        <button
-          onClick={() => setLiked(!liked)}
-          className="flex items-center gap-2 hover:opacity-75 transition-opacity"
-        >
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{
-              width: "44px",
-              height: "44px",
-              background: liked ? "rgba(255,70,70,0.2)" : "rgba(255,255,255,0.08)",
-              transition: "background 0.3s",
-            }}
+      {/* ACTION BAR */}
+      <section className="bg-[#111] px-6 py-5 flex justify-around">
+        <div className="flex flex-col items-center">
+          <button
+            onClick={() => setLiked(!liked)}
+            className="w-11 h-11 rounded-full flex items-center justify-center bg-white/10"
           >
             <ThumbsUp
-              size={19}
-              fill={liked ? "#ff5555" : "none"}
-              color={liked ? "#ff5555" : "#ccc"}
-              style={{ transition: "all 0.3s" }}
+              size={20}
+              color={liked ? "#ff4d4d" : "#ccc"}
+              fill={liked ? "#ff4d4d" : "none"}
             />
-          </div>
-          <span style={{ fontSize: "14px", color: "#ccc", fontWeight: 500 }}>Like</span>
-        </button>
-
-        {/* Comment */}
-        <button className="flex items-center gap-2 hover:opacity-75 transition-opacity">
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{ width: "44px", height: "44px", background: "rgba(255,255,255,0.08)" }}
-          >
-            <MessageSquare size={19} color="#ccc" strokeWidth={1.8} fill="none" />
-          </div>
-          <span style={{ fontSize: "14px", color: "#ccc", fontWeight: 500 }}>Comment</span>
-        </button>
-
-        {/* Share */}
-        <button className="flex items-center gap-2 hover:opacity-75 transition-opacity">
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{ width: "44px", height: "44px", background: "rgba(255,255,255,0.08)" }}
-          >
-            <Share2 size={19} color="#ccc" strokeWidth={1.8} />
-          </div>
-          <span style={{ fontSize: "14px", color: "#ccc", fontWeight: 500 }}>Share</span>
-        </button>
-      </section>
-
-      {/* ========================================================
-           WATCH NEXT & EARN MORE
-          ======================================================== */}
-      <section style={{ background: "#0a0a0a", padding: "28px 0 48px" }}>
-        {/* Section header */}
-        <div
-          className="flex items-center justify-between"
-          style={{ padding: "0 28px 18px" }}
-        >
-          <h2 style={{ fontSize: "18px", fontWeight: 700 }}>
-            Watch Next & Earn More
-          </h2>
-          <ChevronRight size={20} color="#aaa" strokeWidth={2} />
-        </div>
-
-        {/* Card grid:
-            • mobile  → horizontal scroll row
-            • desktop → wrapping flex grid */}
-        <div
-          className="flex gap-4"
-          style={{
-            padding: "0 28px",
-            overflowX: "auto",
-            flexWrap: "wrap",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-        >
-          {suggestedVideos.map((v) => (
-            <VideoCard key={v.id} video={v} />
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
-
-/* ========================================================
-     VIDEO CARD (reusable)
-    ======================================================== */
-function VideoCard({ video }) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        flexShrink: 0,
-        /* clamp keeps cards fluid:
-           mobile min → 30 vw   |  desktop max → 240 px */
-        width: "clamp(140px, 28vw, 240px)",
-        cursor: "pointer",
-      }}
-    >
-      <div
-        className="relative overflow-hidden"
-        style={{
-          borderRadius: "12px",
-          /* height scales with card width */
-          aspectRatio: "16/10",
-          background: "#1a1a1a",
-        }}
-      >
-        {/* Thumbnail */}
-        <img
-          src={video.thumbnail}
-          alt=""
-          className="w-full h-full object-cover"
-          style={{
-            transition: "transform 0.4s ease",
-            transform: hovered ? "scale(1.07)" : "scale(1)",
-          }}
-        />
-
-        {/* Dark wash */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: hovered ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.3)",
-            transition: "background 0.3s",
-          }}
-        />
-
-        {/* Play circle */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            className="flex items-center justify-center"
-            style={{
-              width: "38px",
-              height: "38px",
-              borderRadius: "50%",
-              background: "rgba(0,0,0,0.55)",
-              backdropFilter: "blur(4px)",
-              WebkitBackdropFilter: "blur(4px)",
-              border: "1px solid rgba(255,255,255,0.18)",
-              opacity: hovered ? 1 : 0.82,
-              transition: "opacity 0.3s",
-            }}
-          >
-            <Play size={15} fill="#fff" color="#fff" />
-          </div>
-        </div>
-
-        {/* Views badge — bottom-left */}
-        <div
-          className="absolute flex items-center gap-1"
-          style={{ bottom: "8px", left: "10px" }}
-        >
-          <Play size={9} fill="#fff" color="#fff" />
-          <span style={{ fontSize: "10px", fontWeight: 600, color: "#fff" }}>
-            {video.views}
+          </button>
+          <span className="text-sm mt-1">Like</span>
+          <span className="text-xs text-gray-400">
+            {watchedPercent.toFixed(0)}% watched
           </span>
         </div>
-      </div>
+
+        <div
+          className="flex flex-col items-center cursor-pointer"
+          onClick={() => setShowComments(true)}
+        >
+          <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+            <MessageSquare size={20} />
+          </div>
+          <span className="text-sm mt-1">Comment</span>
+        </div>
+
+        <div className="flex flex-col items-center cursor-pointer">
+          <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+            <Share2 size={20} />
+          </div>
+          <span className="text-sm mt-1">Share</span>
+        </div>
+
+        <div className="flex flex-col items-center">
+          <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
+            <MoreHorizontal size={20} />
+          </div>
+          <span className="text-sm mt-1">More</span>
+        </div>
+      </section>
+
+      {/* RECOMMENDED VIDEOS */}
+      <section className="bg-black px-5 py-6">
+        <h2 className="text-lg font-semibold mb-4">Recommended Videos</h2>
+
+        <div className="space-y-4">
+          {RECOMMENDED_VIDEOS.map((vid) => {
+            const rec = getVideoEntry(vid.id);
+            return (
+              <div
+                key={vid.id}
+                onClick={() => openRecommendedVideo(vid)}
+                className="flex gap-4 cursor-pointer"
+              >
+                <img
+                  src={rec.poster}
+                  className="w-32 h-20 rounded-lg object-cover"
+                />
+                <div>
+                  <h3 className="text-sm font-semibold">{vid.title}</h3>
+                  <p className="text-xs text-gray-400">{vid.creator}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* COMMENTS */}
+      {showComments && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-end">
+          <div className="bg-[#111] rounded-t-2xl p-4 h-[60%] w-full">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="font-semibold">Comments</h3>
+              <button onClick={() => setShowComments(false)}>
+                <X />
+              </button>
+            </div>
+
+            <div className="flex-1 text-gray-400 text-sm">
+              No comments yet
+            </div>
+
+            <div className="flex gap-2 mt-3">
+              <input
+                placeholder="Add a comment..."
+                className="flex-1 bg-black/40 rounded-full px-4 py-2 text-sm outline-none"
+              />
+              <button className="p-2 rounded-full bg-blue-500">
+                <Send size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

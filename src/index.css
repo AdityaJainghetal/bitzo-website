@@ -133,3 +133,17 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* IE / Old Edge */
+* {
+  -ms-overflow-style: none;
+}
