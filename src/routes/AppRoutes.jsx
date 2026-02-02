@@ -32,7 +32,7 @@ export default function AppRoutes() {
           <Route path="withdraw" element={<WithdrawPage />} />
           <Route path="uploadvideo" element={<UploadVideo />} />
           <Route path="reel" element={<ReelPlayerPage />} />
-          <Route path="fullvideo/:id" element={<FullVideo />} />
+          <Route path="video/:id" element={<FullVideo />} />
           <Route path="profile" element={<Profile />} />
         </Route>
       </Route>

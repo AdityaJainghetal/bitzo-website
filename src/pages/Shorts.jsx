@@ -82,7 +82,7 @@ export default function Shorts() {
   return (
     <div className="h-screen w-full bg-black overflow-hidden">
       {/* HEADER */}
-      <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/90 to-transparent px-6 py-4">
+      {/* <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/90 to-transparent px-6 py-4">
         <div className="flex justify-between items-center">
           <h1 className="text-white text-2xl font-bold">Shorts</h1>
           <div className="flex gap-4 text-white">
@@ -90,7 +90,7 @@ export default function Shorts() {
             <MoreVertical />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* SHORTS CONTAINER */}
       <div

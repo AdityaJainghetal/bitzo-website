@@ -1,41 +1,42 @@
 
 // import { useState, useEffect } from "react";
-// import { ChevronRight, Play } from "lucide-react";
+// import { useNavigate } from "react-router-dom";
+// import React from "react";
+// import useRef from "react";
+// import { ChevronRight, Search, Bell, Play, Info, Plus } from "lucide-react";
 
-// const recentShorts = [
-//   { id: 1, dur: "1:40", thumb: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=500&fit=crop" },
-//   { id: 2, dur: "1:00", thumb: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=300&h=500&fit=crop" },
-//   { id: 3, dur: "2:40", thumb: "https://images.unsplash.com/photo-1571759560077-65296cc77dfd?w=300&h=500&fit=crop" },
-//   { id: 4, dur: "0:55", thumb: "https://images.unsplash.com/photo-1552250575-67576307f935?w=300&h=500&fit=crop" },
-//   { id: 5, dur: "1:22", thumb: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=300&h=500&fit=crop" },
-//   { id: 6, dur: "0:48", thumb: "https://images.unsplash.com/photo-1470146718580-010796192dd8?w=300&h=500&fit=crop" },
+// // Romantic International TV Shows
+// const romanticShows = [
+//   { id: 1, title: "Love in the Clouds", thumb: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=225&fit=crop" },
+//   { id: 2, title: "Hidden Love", thumb: "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=400&h=225&fit=crop" },
+//   { id: 3, title: "Queen of Tears", thumb: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=225&fit=crop" },
+//   { id: 4, title: "Inheritors", thumb: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&h=225&fit=crop" },
+//   { id: 5, title: "When I Fly Towards You", thumb: "https://images.unsplash.com/photo-1522158637959-30385a09e0da?w=400&h=225&fit=crop" },
+//   { id: 6, title: "Genie", thumb: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=225&fit=crop" },
 // ];
 
-// const topShorts = [
-//   { id:1, title:"High Earning Video", creator:"@Swaet",     earn:"₹500",    thumb:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=560&fit=crop" },
-//   { id:2, title:"High Earning Video", creator:"@Crimflow",  earn:"₹162.00", thumb:"https://images.unsplash.com/photo-1470146718580-010796192dd8?w=400&h=560&fit=crop" },
-//   { id:3, title:"High Earning Video", creator:"@ZarnMore",  earn:"₹81.00",  thumb:"https://images.unsplash.com/photo-1551244653-a5a5a1ace188?w=400&h=560&fit=crop" },
-//   { id:4, title:"Top Earning Short",  creator:"@NatureVib", earn:"₹240.00", thumb:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=560&fit=crop" },
-//   { id:5, title:"Viral Street Food",  creator:"@FoodieMP",  earn:"₹95.00",  thumb:"https://images.unsplash.com/photo-1470146718580-010796192dd8?w=400&h=560&fit=crop" },
-//   { id:6, title:"Sunset Timelapse",   creator:"@NatureVib", earn:"₹180.00", thumb:"https://images.unsplash.com/photo-1551244653-a5a5a1ace188?w=400&h=560&fit=crop" },
+
+// // Kids Films
+// const kidsFilms = [
+//   // { id: 101, title: "Chhota Bheem: Master of Shaolin", thumb: "https://images.unsplash.com/photo-1587049352846-4a222e784422?w=400&h=225&fit=crop" },
+//   { id: 102, title: "Chhota Bheem: Krishna", thumb: "https://images.unsplash.com/photo-1608889825103-eb5ed706fc64?w=400&h=225&fit=crop" },
+//   { id: 103, title: "The Rise of Kirmada", thumb: "https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=400&h=225&fit=crop" },
+//   { id: 104, title: "Journey to Petra", thumb: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&h=225&fit=crop" },
+//   { id: 105, title: "Mayanagari", thumb: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=225&fit=crop" },
+//   { id: 106, title: "Imbarra", thumb: "https://images.unsplash.com/photo-1606164587034-81b84c4e11d0?w=400&h=225&fit=crop" },
 // ];
 
-// const earnMore = [
-//   { id:1, earn:"$1.30", thumb:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop" },
-//   { id:2, earn:"₹9.40", thumb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" },
-//   { id:3, earn:"₹3.00", thumb:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop" },
-//   { id:4, earn:"₹5.70", thumb:"https://images.unsplash.com/photo-1544148921-1e6f2134d89d?w=300&h=300&fit=crop" },
-//   { id:5, earn:"₹7.20", thumb:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop" },
-//   { id:6, earn:"₹4.10", thumb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" },
+// // Korean Movies & TV
+// const koreanContent = [
+//   { id: 201, title: "Vincenzo", thumb: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=400&h=225&fit=crop" },
+//   { id: 202, title: "Start-Up", thumb: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=225&fit=crop" },
+//   { id: 203, title: "Squid Game", thumb: "https://images.unsplash.com/photo-1608889335941-32ac5f2041b9?w=400&h=225&fit=crop" },
+//   { id: 204, title: "Weak Hero", thumb: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=225&fit=crop" },
+//   { id: 205, title: "Cashero", thumb: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=225&fit=crop" },
+//   { id: 206, title: "Beyond the Bar", thumb: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=225&fit=crop" },
 // ];
 
-// const creators = [
-//   { id:1, vids:["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=220&h=290&fit=crop","https://images.unsplash.com/photo-1470146718580-010796192dd8?w=220&h=290&fit=crop"] },
-//   { id:2, vids:["https://images.unsplash.com/photo-1551244653-a5a5a1ace188?w=220&h=290&fit=crop","https://images.unsplash.com/photo-1544145945-f90425340c7e?w=220&h=290&fit=crop"] },
-//   { id:3, vids:["https://images.unsplash.com/photo-1571759560077-65296cc77dfd?w=220&h=290&fit=crop","https://images.unsplash.com/photo-1552250575-67576307f935?w=220&h=290&fit=crop"] },
-//   { id:4, vids:["https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=220&h=290&fit=crop","https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=220&h=290&fit=crop"] },
-//   { id:5, vids:["https://images.unsplash.com/photo-1470146718580-010796192dd8?w=220&h=290&fit=crop","https://images.unsplash.com/photo-1551244653-a5a5a1ace188?w=220&h=290&fit=crop"] },
-// ];
+
 
 // function useWidth() {
 //   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
@@ -47,285 +48,232 @@
 //   return width;
 // }
 
-// function PlayOverlay({ size = 40 }) {
-//   return (
-//     <div
-//       className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-black/55 backdrop-blur-sm border-2 border-white/25 pointer-events-none"
-//       style={{ width: size, height: size }}
-//     >
-//       <Play size={size * 0.42} fill="white" color="white" strokeWidth={0} className="ml-0.5" />
-//     </div>
-//   );
-// }
 
-// function BottomGradient({ opacity = 0.6 }) {
-//   return (
-//     <div
-//       className="absolute inset-0 pointer-events-none z-[1]"
-//       style={{ background: `linear-gradient(to top, rgba(0,0,0,${opacity}) 0%, transparent 55%)` }}
-//     />
-//   );
-// }
 
 // function SectionHeader({ title }) {
 //   return (
-//     <div className="mb-3 flex items-center justify-between md:mb-4">
-//       <h2 className="text-[17px] font-bold tracking-tight text-white md:text-[19px]">
+//     <div className="mb-3 flex items-center justify-between">
+//       <h2 className="text-white text-xl font-semibold flex items-center gap-2 hover:text-white/80 transition-colors cursor-pointer">
 //         {title}
+//         <ChevronRight size={20} className="text-zinc-400" />
 //       </h2>
-//       <div className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 cursor-pointer">
-//         See All <ChevronRight size={15} />
-//       </div>
 //     </div>
 //   );
 // }
 
-// function RecentRow() {
-//   const isMobile = useWidth() < 768;
+// function MovieCard({ item, onClick }) {
+//   const [isHovered, setIsHovered] = useState(false);
+
 //   return (
-//     <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide md:gap-3.5">
-//       {recentShorts.map((item) => (
-//         <div
-//           key={item.id}
-//           className={`flex-shrink-0 rounded-lg overflow-hidden relative bg-zinc-900 cursor-pointer transition-transform duration-200 hover:scale-[1.035] ${
-//             isMobile ? "w-[108px] h-[148px]" : "w-[148px] h-[200px]"
-//           }`}
-//         >
-//           <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-//           <BottomGradient opacity={0.5} />
-//           <PlayOverlay size={isMobile ? 36 : 42} />
-//           <div className="absolute bottom-1.5 right-1.5 z-20 rounded bg-black/60 px-1.5 py-0.5 text-[10.5px] font-medium text-white backdrop-blur-md">
-//             {item.dur}
+//     <div
+//       onMouseEnter={() => setIsHovered(true)}
+//       onMouseLeave={() => setIsHovered(false)}
+//       onClick={() => onClick(item)}
+//       className="flex-shrink-0 rounded-md overflow-hidden relative bg-zinc-900 cursor-pointer transition-all duration-300 hover:scale-105 hover:z-20 hover:ring-2 hover:ring-white/30 w-[240px] h-[135px] md:w-[280px] md:h-[158px]"
+//     >
+//       <img 
+//         src={item.thumb} 
+//         alt={item.title} 
+//         className="h-full w-full object-cover"
+//       />
+      
+//       {/* Hover overlay */}
+//       {isHovered && (
+//         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent">
+//           <div className="absolute bottom-0 left-0 right-0 p-3">
+//             <div className="flex items-center justify-between mb-2">
+//               <div className="flex items-center space-x-2">
+//                 <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center hover:bg-white/90">
+//                   <Play size={16} fill="black" />
+//                 </button>
+//                 <button className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center hover:border-white">
+//                   <Plus size={16} />
+//                 </button>
+//                 <button className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center hover:border-white">
+//                   <Info size={16} />
+//                 </button>
+//               </div>
+//             </div>
+//             <div>
+//               <div className="flex items-center text-xs text-gray-300 mb-1">
+//                 <span className="mr-2">94% Match</span>
+//                 <span className="mr-2">2023</span>
+//                 <span className="border border-gray-500 px-1">TV-MA</span>
+//               </div>
+//               <h3 className="text-white text-sm font-semibold">{item.title}</h3>
+//             </div>
 //           </div>
 //         </div>
-//       ))}
+//       )}
+      
+//       {/* Title always visible at bottom */}
+//       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+//         <h3 className="text-white text-sm font-semibold truncate">{item.title}</h3>
+//       </div>
 //     </div>
 //   );
 // }
 
-// function TopShortsSection() {
+
+
+
+
+// export default function NetflixStylePage() {
+//   const navigate = useNavigate();
 //   const isMobile = useWidth() < 768;
 
-//   if (isMobile) {
-//     return (
-//       <div>
-//         <SectionHeader title="Top Shorts" />
-//         <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
-//           {topShorts.map((item) => (
-//             <div key={item.id} className="w-[153px] flex-shrink-0 cursor-pointer">
-//               <div className="relative h-[204px] w-full rounded-lg overflow-hidden bg-zinc-900 transition-transform duration-200 hover:scale-[1.025]">
-//                 <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-//                 <BottomGradient opacity={0.7} />
-//                 <PlayOverlay size={38} />
-//                 <div className="absolute bottom-2 left-2 z-20 flex max-w-[calc(100%-16px)] items-center gap-1.5 rounded bg-black/60 px-2 py-1 text-xs backdrop-blur-md">
-//                   <span>🔥</span>
-//                   <span className="font-semibold text-white truncate">{item.title}</span>
-//                 </div>
-//               </div>
-//               <div className="mt-1.5 flex items-center gap-1.5 text-[10px] text-zinc-400">
-//                 <span>💰</span>
-//                 <span className="font-medium text-zinc-300">{item.earn}</span>
-//                 <span className="text-zinc-700">•</span>
-//                 <span className="text-zinc-500">{item.creator}</span>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     );
-//   }
+//   const handleItemClick = (item) => {
+//     navigate(`/video/${item.id}`, { state: { item } });
+//   };
 
 //   return (
-//     <div>
-//       <SectionHeader title="Top Shorts" />
-//       <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
-//         {topShorts.map((item) => (
-//           <div key={item.id} className="group cursor-pointer">
-//             <div className="relative aspect-[9/13] rounded-xl overflow-hidden bg-zinc-900 transition-all duration-250 group-hover:-translate-y-1 group-hover:scale-[1.03] group-hover:shadow-xl group-hover:shadow-black/40">
-//               <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-//               <BottomGradient opacity={0.7} />
-//               <PlayOverlay size={44} />
-//               <div className="absolute bottom-3 left-3 z-20 flex max-w-[calc(100%-24px)] items-center gap-2 rounded-lg bg-black/65 px-3 py-1.5 text-sm backdrop-blur-md">
-//                 <span className="text-base">🔥</span>
-//                 <span className="font-semibold text-white truncate">{item.title}</span>
+//     <div className="min-h-screen bg-black text-white">
+//       <style>{`
+//         .scrollbar-hide::-webkit-scrollbar {
+//           display: none;
+//         }
+//         .scrollbar-hide {
+//           -ms-overflow-style: none;
+//           scrollbar-width: none;
+//         }
+//         .scrollbar-show:hover::-webkit-scrollbar {
+//           display: block;
+//           height: 8px;
+//         }
+//         .scrollbar-show:hover::-webkit-scrollbar-track {
+//           background: rgba(255, 255, 255, 0.1);
+//           border-radius: 4px;
+//         }
+//         .scrollbar-show:hover::-webkit-scrollbar-thumb {
+//           background: rgba(255, 255, 255, 0.3);
+//           border-radius: 4px;
+//         }
+//         .scrollbar-show:hover::-webkit-scrollbar-thumb:hover {
+//           background: rgba(255, 255, 255, 0.5);
+//         }
+//         .line-clamp-3 {
+//           display: -webkit-box;
+//           -webkit-line-clamp: 3;
+//           -webkit-box-orient: vertical;
+//           overflow: hidden;
+//         }
+//       `}</style>
+
+//       {/* <Navbar /> */}
+      
+//       {/* <MainBanner /> */}
+
+//       <div className="mx-auto max-w-screen-2xl px-4 pt-6 md:px-12 lg:px-16 -mt-32 relative z-10">
+        
+//         {/* Romantic International TV Shows Section */}
+//         <div className="mb-10">
+//           <SectionHeader title="Romantic International TV Shows" />
+//           {/* <ScrollableRow items={romanticShows} onItemClick={handleItemClick} /> */}
+//         </div>
+
+//         {/* Kids Films Section */}
+//         <div className="mb-10">
+//           <SectionHeader title="Kids Films" />
+//           {/* <ScrollableRow items={kidsFilms} onItemClick={handleItemClick} /> */}
+//         </div>
+
+//         {/* Korean Movies & TV Section */}
+//         <div className="mb-10">
+//           {/* <SectionHeader title="Korean Movies & TV Dubbed in Hindi" /> */}
+//           {/* <ScrollableRow items={koreanContent} onItemClick={handleItemClick} /> */}
+//         </div>
+
+//         {/* Continue Watching Section */}
+//         <div className="mb-10">
+//           <SectionHeader title="Continue Watching" />
+//           <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
+//             {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
+//               <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
+//                 <div className="relative">
+//                   <MovieCard item={item} onClick={handleItemClick} />
+//                   <div className="mt-2">
+//                     <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+//                       <div className="h-full bg-red-600 w-3/4"></div>
+//                     </div>
+//                     <p className="text-xs text-gray-400 mt-1">74% watched</p>
+//                   </div>
+//                 </div>
 //               </div>
-//             </div>
-//             <div className="mt-2.5 flex items-center gap-2 text-sm">
-//               <span>💰</span>
-//               <span className="font-medium text-zinc-200">{item.earn}</span>
-//               <span className="text-zinc-700">•</span>
-//               <span className="text-zinc-500">{item.creator}</span>
-//             </div>
+//             ))}
 //           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
+//         </div>
 
-// function EarnMoreSection() {
-//   const isMobile = useWidth() < 768;
-
-//   if (isMobile) {
-//     return (
-//       <div>
-//         <SectionHeader title="Earn More, Watch More" />
-//         <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
-//           {earnMore.map((item) => (
-//             <div
-//               key={item.id}
-//               className="relative h-[132px] w-[132px] flex-shrink-0 rounded-lg overflow-hidden bg-zinc-900 cursor-pointer transition-transform hover:scale-105 duration-200"
-//             >
-//               <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-//               <BottomGradient opacity={0.55} />
-//               <PlayOverlay size={32} />
-//               <div className="absolute bottom-1.5 left-1.5 z-20 rounded bg-black/60 px-2 py-0.5 text-xs font-semibold text-white backdrop-blur-sm">
-//                 {item.earn}
+//         {/* Popular on Netflix Section */}
+//         <div className="mb-10">
+//           <SectionHeader title="Popular on Netflix" />
+//           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+//             {koreanContent.map((item) => (
+//               <div 
+//                 key={item.id} 
+//                 onClick={() => handleItemClick(item)}
+//                 className="cursor-pointer group"
+//               >
+//                 <div className="relative aspect-video rounded-md overflow-hidden mb-2">
+//                   <img 
+//                     src={item.thumb} 
+//                     alt={item.title}
+//                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+//                   />
+//                   <div className="absolute top-2 right-2 bg-black/70 rounded px-2 py-1 text-xs">
+//                     #1
+//                   </div>
+//                 </div>
+//                 <h3 className="text-white text-sm font-medium truncate">{item.title}</h3>
 //               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div>
-//       <SectionHeader title="Earn More, Watch More" />
-//       <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
-//         {earnMore.map((item) => (
-//           <div
-//             key={item.id}
-//             className="group relative aspect-square rounded-xl overflow-hidden bg-zinc-900 cursor-pointer transition-all duration-250 hover:-translate-y-1 hover:scale-[1.025] hover:shadow-xl hover:shadow-black/35"
-//           >
-//             <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-//             <BottomGradient opacity={0.55} />
-//             <PlayOverlay size={38} />
-//             <div className="absolute bottom-3 left-3 z-20 rounded bg-black/60 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md">
-//               {item.earn}
-//             </div>
+//             ))}
 //           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// function CreatorSection() {
-//   const isMobile = useWidth() < 768;
-
-//   return (
-//     <div>
-//       <div className="mb-3 flex items-center justify-between md:mb-4">
-//         <h2 className="text-[17px] font-bold tracking-tight text-white md:text-[19px]">
-//           Recommended
-//         </h2>
-//         <ChevronRight size={18} className="text-zinc-500 cursor-pointer" />
-//       </div>
-
-//       <div className="relative overflow-hidden">
-//         <div
-//           className="flex gap-4 md:gap-6 animate-marquee whitespace-nowrap py-2"
-//           style={{ animation: "marquee 32s linear infinite" }}
-//         >
-//           {creators.map((item) => (
-//             <div
-//               key={item.id}
-//               className="flex gap-3 md:gap-4 min-w-[240px] md:min-w-[320px]"
-//             >
-//               {item.vids.map((vid, i) => (
-//                 <div
-//                   key={i}
-//                   className={`flex-shrink-0 rounded-lg overflow-hidden relative bg-zinc-900 transition-transform duration-200 hover:scale-[1.04] ${
-//                     isMobile ? "w-[110px] h-[150px]" : "w-[150px] h-[200px]"
-//                   }`}
-//                 >
-//                   <img src={vid} alt="" className="h-full w-full object-cover" />
-//                   <BottomGradient opacity={0.5} />
-//                   <PlayOverlay size={isMobile ? 32 : 40} />
-//                 </div>
-//               ))}
-//             </div>
-//           ))}
-
-//           {/* Duplicate set for seamless infinite scroll */}
-//           {creators.map((item) => (
-//             <div
-//               key={"dup-" + item.id}
-//               className="flex gap-3 md:gap-4 min-w-[240px] md:min-w-[320px]"
-//               aria-hidden="true"
-//             >
-//               {item.vids.map((vid, i) => (
-//                 <div
-//                   key={i}
-//                   className={`flex-shrink-0 rounded-lg overflow-hidden relative bg-zinc-900 transition-transform duration-200 hover:scale-[1.04] ${
-//                     isMobile ? "w-[110px] h-[150px]" : "w-[150px] h-[200px]"
-//                   }`}
-//                 >
-//                   <img src={vid} alt="" className="h-full w-full object-cover" />
-//                   <BottomGradient opacity={0.5} />
-//                   <PlayOverlay size={isMobile ? 32 : 40} />
-//                 </div>
-//               ))}
-//             </div>
-//           ))}
 //         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
-// export default function ShortsExplorePage() {
-//   return (
-//     <div className="min-h-screen bg-[#0f0f0f] text-white pb-10 md:pb-16">
-//       <div className="mx-auto flex max-w-screen-2xl flex-col gap-6 px-4 pt-5 md:gap-10 md:px-6 lg:px-8">
-//         <RecentRow />
-//         <TopShortsSection />
-//         <EarnMoreSection />
-//         <CreatorSection />
 //       </div>
+
+     
 //     </div>
 //   );
 // }
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Play } from "lucide-react";
+import React from "react";
+import useRef from "react";
+import { ChevronRight, Search, Bell, Play, Info, Plus } from "lucide-react";
 
-const recentShorts = [
-  { id: 1, dur: "1:40", title: "Mountain Sunrise", creator: "@NatureVib", earn: "₹45.00", thumb: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=500&fit=crop" },
-  { id: 2, dur: "1:00", title: "City Nights", creator: "@UrbanLife", earn: "₹32.00", thumb: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=300&h=500&fit=crop" },
-  { id: 3, dur: "2:40", title: "Ocean Waves", creator: "@BeachVibes", earn: "₹67.00", thumb: "https://images.unsplash.com/photo-1571759560077-65296cc77dfd?w=300&h=500&fit=crop" },
-  { id: 4, dur: "0:55", title: "Runner's High", creator: "@FitLife", earn: "₹28.00", thumb: "https://images.unsplash.com/photo-1552250575-67576307f935?w=300&h=500&fit=crop" },
-  { id: 5, dur: "1:22", title: "Trail Run", creator: "@RunnerX", earn: "₹51.00", thumb: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=300&h=500&fit=crop" },
-  { id: 6, dur: "0:48", title: "Forest Walk", creator: "@NatureVib", earn: "₹19.00", thumb: "https://images.unsplash.com/photo-1470146718580-010796192dd8?w=300&h=500&fit=crop" },
+// Romantic International TV Shows
+const romanticShows = [
+  { id: 1, title: "Love in the Clouds", thumb: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=225&fit=crop" },
+  { id: 2, title: "Hidden Love", thumb: "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=400&h=225&fit=crop" },
+  { id: 3, title: "Queen of Tears", thumb: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=225&fit=crop" },
+  { id: 4, title: "Inheritors", thumb: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&h=225&fit=crop" },
+  { id: 5, title: "When I Fly Towards You", thumb: "https://images.unsplash.com/photo-1522158637959-30385a09e0da?w=400&h=225&fit=crop" },
+  { id: 6, title: "Genie", thumb: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=225&fit=crop" },
 ];
 
-const topShorts = [
-  { id: 101, title: "High Earning Video", creator: "@Swaet",     earn: "₹500",    thumb: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=560&fit=crop" },
-  { id: 102, title: "High Earning Video", creator: "@Crimflow",  earn: "₹162.00", thumb: "https://images.unsplash.com/photo-1470146718580-010796192dd8?w=400&h=560&fit=crop" },
-  { id: 103, title: "High Earning Video", creator: "@ZarnMore",  earn: "₹81.00",  thumb: "https://images.unsplash.com/photo-1551244653-a5a5a1ace188?w=400&h=560&fit=crop" },
-  { id: 104, title: "Top Earning Short",  creator: "@NatureVib", earn: "₹240.00", thumb: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=560&fit=crop" },
-  { id: 105, title: "Viral Street Food",  creator: "@FoodieMP",  earn: "₹95.00",  thumb: "https://images.unsplash.com/photo-1470146718580-010796192dd8?w=400&h=560&fit=crop" },
-  { id: 106, title: "Sunset Timelapse",   creator: "@NatureVib", earn: "₹180.00", thumb: "https://images.unsplash.com/photo-1551244653-a5a5a1ace188?w=400&h=560&fit=crop" },
+
+// Kids Films
+const kidsFilms = [
+  // { id: 101, title: "Chhota Bheem: Master of Shaolin", thumb: "https://images.unsplash.com/photo-1587049352846-4a222e784422?w=400&h=225&fit=crop" },
+  { id: 102, title: "Chhota Bheem: Krishna", thumb: "https://images.unsplash.com/photo-1608889825103-eb5ed706fc64?w=400&h=225&fit=crop" },
+  { id: 103, title: "The Rise of Kirmada", thumb: "https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=400&h=225&fit=crop" },
+  { id: 104, title: "Journey to Petra", thumb: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&h=225&fit=crop" },
+  { id: 105, title: "Mayanagari", thumb: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=225&fit=crop" },
+  { id: 106, title: "Imbarra", thumb: "https://images.unsplash.com/photo-1606164587034-81b84c4e11d0?w=400&h=225&fit=crop" },
 ];
 
-const earnMore = [
-  { id: 201, title: "Golden Hour",     creator: "@PhotoPro",      earn: "$1.30", thumb: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop" },
-  { id: 202, title: "Portrait Session", creator: "@PortraitArt",  earn: "₹9.40", thumb: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" },
-  { id: 203, title: "Nature Close-up",  creator: "@MacroShots",   earn: "₹3.00", thumb: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop" },
-  { id: 204, title: "Abstract Light",   creator: "@LightPainter", earn: "₹5.70", thumb: "https://images.unsplash.com/photo-1544148921-1e6f2134d89d?w=300&h=300&fit=crop" },
-  { id: 205, title: "Face Sketch",      creator: "@SketchMaster", earn: "₹7.20", thumb: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop" },
-  { id: 206, title: "Studio Light",     creator: "@StudioPro",    earn: "₹4.10", thumb: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" },
+// Korean Movies & TV
+const koreanContent = [
+  { id: 201, title: "Vincenzo", thumb: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=400&h=225&fit=crop" },
+  { id: 202, title: "Start-Up", thumb: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=225&fit=crop" },
+  { id: 203, title: "Squid Game", thumb: "https://images.unsplash.com/photo-1608889335941-32ac5f2041b9?w=400&h=225&fit=crop" },
+  { id: 204, title: "Weak Hero", thumb: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=225&fit=crop" },
+  { id: 205, title: "Cashero", thumb: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=225&fit=crop" },
+  { id: 206, title: "Beyond the Bar", thumb: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=225&fit=crop" },
 ];
 
-const creators = [
-  { id: 1, vids: [recentShorts[0], recentShorts[5]] },
-  { id: 2, vids: [recentShorts[2], recentShorts[1]] },
-  { id: 3, vids: [recentShorts[3], recentShorts[4]] },
-  { id: 4, vids: [recentShorts[4], recentShorts[0]] },
-  { id: 5, vids: [recentShorts[5], recentShorts[2]] },
-];
+
 
 function useWidth() {
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
@@ -337,240 +285,190 @@ function useWidth() {
   return width;
 }
 
-function PlayOverlay({ size = 40 }) {
-  return (
-    <div
-      className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-black/55 border border-white/25 pointer-events-none"
-      style={{ width: size, height: size, backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }}
-    >
-      <Play size={size * 0.42} fill="white" color="white" strokeWidth={0} className="ml-0.5" />
-    </div>
-  );
-}
 
-function BottomGradient({ opacity = 0.6 }) {
-  return (
-    <div
-      className="absolute inset-0 pointer-events-none z-[1]"
-      style={{ background: `linear-gradient(to top, rgba(0,0,0,${opacity}) 0%, transparent 55%)` }}
-    />
-  );
-}
 
 function SectionHeader({ title }) {
   return (
-    <div className="mb-3 flex items-center justify-between md:mb-4">
-      <h2 className="text-[17px] font-bold tracking-tight text-white md:text-[19px]">
+    <div className="mb-3 flex items-center justify-between">
+      <h2 className="text-white text-xl font-semibold flex items-center gap-2 hover:text-white/80 transition-colors cursor-pointer">
         {title}
+        <ChevronRight size={20} className="text-zinc-400" />
       </h2>
-      <div className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 cursor-pointer">
-        See All <ChevronRight size={15} />
-      </div>
     </div>
   );
 }
 
-function RecentRow({ onVideoClick }) {
-  const isMobile = useWidth() < 768;
+function MovieCard({ item, onClick }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide md:gap-3.5">
-      {recentShorts.map((item) => (
-        <div
-          key={item.id}
-          onClick={() => onVideoClick(item)}
-          className={`flex-shrink-0 rounded-lg overflow-hidden relative bg-zinc-900 cursor-pointer transition-transform duration-200 hover:scale-[1.035] active:scale-[0.95] ${
-            isMobile ? "w-[108px] h-[148px]" : "w-[148px] h-[200px]"
-          }`}
-        >
-          <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-          <BottomGradient opacity={0.5} />
-          <PlayOverlay size={isMobile ? 36 : 42} />
-          <div className="absolute bottom-1.5 right-1.5 z-20 rounded bg-black/60 px-1.5 py-0.5 text-[10.5px] font-medium text-white backdrop-blur-md">
-            {item.dur}
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onClick(item)}
+      className="flex-shrink-0 rounded-md overflow-hidden relative bg-zinc-900 cursor-pointer transition-all duration-300 hover:scale-105 hover:z-20 hover:ring-2 hover:ring-white/30 w-[240px] h-[135px] md:w-[280px] md:h-[158px]"
+    >
+      <img 
+        src={item.thumb} 
+        alt={item.title} 
+        className="h-full w-full object-cover"
+      />
+      
+      {/* Hover overlay */}
+      {isHovered && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent">
+          <div className="absolute bottom-0 left-0 right-0 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center hover:bg-white/90">
+                  <Play size={16} fill="black" />
+                </button>
+                <button className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center hover:border-white">
+                  <Plus size={16} />
+                </button>
+                <button className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center hover:border-white">
+                  <Info size={16} />
+                </button>
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center text-xs text-gray-300 mb-1">
+                <span className="mr-2">94% Match</span>
+                <span className="mr-2">2023</span>
+                <span className="border border-gray-500 px-1">TV-MA</span>
+              </div>
+              <h3 className="text-white text-sm font-semibold">{item.title}</h3>
+            </div>
           </div>
         </div>
-      ))}
-    </div>
-  );
-}
-
-function TopShortsSection({ onVideoClick }) {
-  const isMobile = useWidth() < 768;
-
-  if (isMobile) {
-    return (
-      <div>
-        <SectionHeader title="Top Shorts" />
-        <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
-          {topShorts.map((item) => (
-            <div key={item.id} onClick={() => onVideoClick(item)} className="w-[153px] flex-shrink-0 cursor-pointer">
-              <div className="relative h-[204px] w-full rounded-lg overflow-hidden bg-zinc-900 transition-transform duration-200 hover:scale-[1.025] active:scale-[0.95]">
-                <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-                <BottomGradient opacity={0.7} />
-                <PlayOverlay size={38} />
-                <div className="absolute bottom-2 left-2 z-20 flex max-w-[calc(100%-16px)] items-center gap-1.5 rounded bg-black/60 px-2 py-1 text-xs backdrop-blur-md">
-                  <span>🔥</span>
-                  <span className="font-semibold text-white truncate">{item.title}</span>
-                </div>
-              </div>
-              <div className="mt-1.5 flex items-center gap-1.5 text-[10px] text-zinc-400">
-                <span>💰</span>
-                <span className="font-medium text-zinc-300">{item.earn}</span>
-                <span className="text-zinc-700">•</span>
-                <span className="text-zinc-500">{item.creator}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <SectionHeader title="Top Shorts" />
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
-        {topShorts.map((item) => (
-          <div key={item.id} onClick={() => onVideoClick(item)} className="group cursor-pointer">
-            <div className="relative aspect-[9/13] rounded-xl overflow-hidden bg-zinc-900 transition-all duration-250 group-hover:-translate-y-1 group-hover:scale-[1.03] group-hover:shadow-xl group-hover:shadow-black/40">
-              <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-              <BottomGradient opacity={0.7} />
-              <PlayOverlay size={44} />
-              <div className="absolute bottom-3 left-3 z-20 flex max-w-[calc(100%-24px)] items-center gap-2 rounded-lg bg-black/65 px-3 py-1.5 text-sm backdrop-blur-md">
-                <span className="text-base">🔥</span>
-                <span className="font-semibold text-white truncate">{item.title}</span>
-              </div>
-            </div>
-            <div className="mt-2.5 flex items-center gap-2 text-sm">
-              <span>💰</span>
-              <span className="font-medium text-zinc-200">{item.earn}</span>
-              <span className="text-zinc-700">•</span>
-              <span className="text-zinc-500">{item.creator}</span>
-            </div>
-          </div>
-        ))}
+      )}
+      
+      {/* Title always visible at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+        <h3 className="text-white text-sm font-semibold truncate">{item.title}</h3>
       </div>
     </div>
   );
 }
 
-function EarnMoreSection({ onVideoClick }) {
-  const isMobile = useWidth() < 768;
 
-  if (isMobile) {
-    return (
-      <div>
-        <SectionHeader title="Earn More, Watch More" />
-        <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
-          {earnMore.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => onVideoClick(item)}
-              className="relative h-[132px] w-[132px] flex-shrink-0 rounded-lg overflow-hidden bg-zinc-900 cursor-pointer transition-transform hover:scale-105 duration-200 active:scale-[0.95]"
-            >
-              <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-              <BottomGradient opacity={0.55} />
-              <PlayOverlay size={32} />
-              <div className="absolute bottom-1.5 left-1.5 z-20 rounded bg-black/60 px-2 py-0.5 text-xs font-semibold text-white backdrop-blur-sm">
-                {item.earn}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
-  return (
-    <div>
-      <SectionHeader title="Earn More, Watch More" />
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
-        {earnMore.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => onVideoClick(item)}
-            className="group relative aspect-square rounded-xl overflow-hidden bg-zinc-900 cursor-pointer transition-all duration-250 hover:-translate-y-1 hover:scale-[1.025] hover:shadow-xl hover:shadow-black/35 active:scale-[0.95]"
-          >
-            <img src={item.thumb} alt="" className="h-full w-full object-cover" />
-            <BottomGradient opacity={0.55} />
-            <PlayOverlay size={38} />
-            <div className="absolute bottom-3 left-3 z-20 rounded bg-black/60 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md">
-              {item.earn}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
-function CreatorSection({ onVideoClick }) {
-  const isMobile = useWidth() < 768;
 
-  return (
-    <div>
-      <div className="mb-3 flex items-center justify-between md:mb-4">
-        <h2 className="text-[17px] font-bold tracking-tight text-white md:text-[19px]">
-          Recommended
-        </h2>
-        <ChevronRight size={18} className="text-zinc-500 cursor-pointer" />
-      </div>
-
-      <style>{`
-        @keyframes marquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
-
-      <div className="relative overflow-hidden">
-        <div
-          className="flex py-2"
-          style={{ animation: "marquee 32s linear infinite", width: "200%" }}
-        >
-          {[...creators, ...creators].map((item, outerIdx) => (
-            <div
-              key={outerIdx}
-              className="flex gap-3 md:gap-4 min-w-[240px] md:min-w-[320px]"
-            >
-              {item.vids.map((vid, i) => (
-                <div
-                  key={i}
-                  onClick={() => onVideoClick(vid)}
-                  className={`flex-shrink-0 rounded-lg overflow-hidden relative bg-zinc-900 cursor-pointer transition-transform duration-200 hover:scale-[1.04] active:scale-[0.95] ${
-                    isMobile ? "w-[110px] h-[150px]" : "w-[150px] h-[200px]"
-                  }`}
-                >
-                  <img src={vid.thumb} alt="" className="h-full w-full object-cover" />
-                  <BottomGradient opacity={0.5} />
-                  <PlayOverlay size={isMobile ? 32 : 40} />
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── MAIN EXPORT ──────────────────────────────────────────────
-export default function ShortsExplorePage() {
+export default function NetflixStylePage() {
   const navigate = useNavigate();
+  const isMobile = useWidth() < 768;
 
-  // Every card click → /fullvideo/:id  +  carry full video object in location.state
-  const handleVideoClick = (video) => {
-    navigate(`/fullvideo/${video.id}`, { state: { video } });
+  const handleItemClick = (item) => {
+    navigate(`/video/${item.id}`, { state: { item } });
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white pb-10 md:pb-16">
-      <div className="mx-auto flex max-w-screen-2xl flex-col gap-6 px-4 pt-5 md:gap-10 md:px-6 lg:px-8">
-        <RecentRow        onVideoClick={handleVideoClick} />
-        <TopShortsSection onVideoClick={handleVideoClick} />
-        <EarnMoreSection  onVideoClick={handleVideoClick} />
-        <CreatorSection   onVideoClick={handleVideoClick} />
+    <div className="min-h-screen bg-black text-white">
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-show:hover::-webkit-scrollbar {
+          display: block;
+          height: 8px;
+        }
+        .scrollbar-show:hover::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+        .scrollbar-show:hover::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 4px;
+        }
+        .scrollbar-show:hover::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+        .line-clamp-3 {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
+
+      {/* <Navbar /> */}
+      
+      {/* <MainBanner /> */}
+
+      <div className="mx-auto max-w-screen-2xl px-4 pt-6 md:px-12 lg:px-16 -mt-32 relative z-10">
+        
+        {/* Romantic International TV Shows Section */}
+        <div className="mb-10">
+          <SectionHeader title="Romantic International TV Shows" />
+          {/* <ScrollableRow items={romanticShows} onItemClick={handleItemClick} /> */}
+        </div>
+
+        {/* Kids Films Section */}
+        <div className="mb-10">
+          <SectionHeader title="Kids Films" />
+          {/* <ScrollableRow items={kidsFilms} onItemClick={handleItemClick} /> */}
+        </div>
+
+        {/* Korean Movies & TV Section */}
+        <div className="mb-10">
+          {/* <SectionHeader title="Korean Movies & TV Dubbed in Hindi" /> */}
+          {/* <ScrollableRow items={koreanContent} onItemClick={handleItemClick} /> */}
+        </div>
+
+        {/* Continue Watching Section */}
+        <div className="mb-10">
+          <SectionHeader title="Continue Watching" />
+          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
+            {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
+              <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
+                <div className="relative">
+                  <MovieCard item={item} onClick={handleItemClick} />
+                  <div className="mt-2">
+                    <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-600 w-3/4"></div>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">74% watched</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Popular on Netflix Section - Now Changed to Videos */}
+        <div className="mb-10">
+          <SectionHeader title="Videos" />
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {koreanContent.map((item) => (
+              <div 
+                key={item.id} 
+                onClick={() => handleItemClick(item)}
+                className="cursor-pointer group"
+              >
+                <div className="relative aspect-video rounded-md overflow-hidden mb-2">
+                  <img 
+                    src={item.thumb} 
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-2 right-2 bg-black/70 rounded px-2 py-1 text-xs">
+                    #1
+                  </div>
+                </div>
+                <h3 className="text-white text-sm font-medium truncate">{item.title}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
+
+     
     </div>
   );
 }

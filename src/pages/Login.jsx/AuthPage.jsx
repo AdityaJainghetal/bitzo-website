@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { getDeviceId } from "./deviceId"; // your helper file
 
-const API_BASE = "https://bitzo-backend.onrender.com/api"; // change to your backend URL
+const API_BASE = "http://localhost:8000/api"; // change to your backend URL
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
