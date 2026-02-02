@@ -404,7 +404,7 @@ export default function NetflixStylePage() {
         
         {/* Romantic International TV Shows Section */}
         <div className="mb-10">
-          <SectionHeader title="Romantic International TV Shows" />
+          {/* <SectionHeader title="Romantic International TV Shows" /> */}
           {/* <ScrollableRow items={romanticShows} onItemClick={handleItemClick} /> */}
         </div>
 
