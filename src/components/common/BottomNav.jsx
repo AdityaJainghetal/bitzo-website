@@ -159,7 +159,7 @@ const bottomItems = [
   { icon: Home, label: 'Home', path: '/' },
   { icon: Flame, label: 'Shorts', path: '/shorts' },
   { icon: Plus, label: '', path: '/uploadvideo', isCenter: true },
-  { icon: MonitorSpeakerIcon, label: 'Earn More', path: '/earn' },
+  { icon: MonitorSpeakerIcon, label: 'Earn More', path: '/' },
   { icon: User, label: 'You', path: '/profile' },
 ];
 
