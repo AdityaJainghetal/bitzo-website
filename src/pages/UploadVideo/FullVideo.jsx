@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
-  // ArrowLeft,
   ThumbsUp,
   MessageSquare,
   Share2,
@@ -10,11 +9,9 @@ import {
   Volume2,
   VolumeX,
   MoreHorizontal,
-  // Grid,
   X,
   Send,
   ChevronRight,
-  // Info,
   Plus,
 } from "lucide-react";
 
