@@ -16,7 +16,7 @@ export default function TopicChips() {
           <button
             key={topic}
             className={`
-              px-4 py-1.5 text-sm font-medium rounded-lg whitespace-nowrap flex-shrink-0 transition-colors
+              px-6 py-1.5  font-medium rounded-lg whitespace-nowrap flex-shrink-0 transition-colors
               ${
                 index === 0
                   ? 'bg-white text-black hover:bg-gray-200'

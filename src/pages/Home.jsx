@@ -6,7 +6,7 @@ export default function Home() {
     <div>
       <TopicChips />
       <VideoGrid />
-      <VideoGrid />
+      {/* <VideoGrid /> */}
 
       
     </div>

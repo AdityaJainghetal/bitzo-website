@@ -1,4 +1,5 @@
 
+
 // import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 // import React from "react";
@@ -107,9 +108,9 @@
 //       )}
       
 //       {/* Title always visible at bottom */}
-//       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+//       {/* <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-transparent to-transparent">
 //         <h3 className="text-white text-sm font-semibold truncate">{item.title}</h3>
-//       </div>
+//       </div> */}
 //     </div>
 //   );
 // }
@@ -163,19 +164,10 @@
       
 //       {/* <MainBanner /> */}
 
-//       <div className="mx-auto max-w-screen-2xl px-4 pt-6 md:px-12 lg:px-16 -mt-32 relative z-10">
+//       <div className="mx-auto max-w-screen-2xl px-4 pt-25 md:px-12 lg:px-16 -mt-32 relative z-10">
         
 //         {/* Romantic International TV Shows Section */}
-//         <div className="mb-10">
-//           <SectionHeader title="Romantic International TV Shows" />
-//           {/* <ScrollableRow items={romanticShows} onItemClick={handleItemClick} /> */}
-//         </div>
-
-//         {/* Kids Films Section */}
-//         <div className="mb-10">
-//           <SectionHeader title="Kids Films" />
-//           {/* <ScrollableRow items={kidsFilms} onItemClick={handleItemClick} /> */}
-//         </div>
+     
 
 //         {/* Korean Movies & TV Section */}
 //         <div className="mb-10">
@@ -185,7 +177,7 @@
 
 //         {/* Continue Watching Section */}
 //         <div className="mb-10">
-//           <SectionHeader title="Continue Watching" />
+//           <SectionHeader title="Recommended Videos" />
 //           <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
 //             {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
 //               <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
@@ -203,10 +195,74 @@
 //           </div>
 //         </div>
 
-//         {/* Popular on Netflix Section */}
-//         <div className="mb-10">
-//           <SectionHeader title="Popular on Netflix" />
-//           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+//          <div className="mb-10">
+//           <SectionHeader title="Trending Videos" />
+//           <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
+//             {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
+//               <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
+//                 <div className="relative">
+//                   <MovieCard item={item} onClick={handleItemClick} />
+//                   <div className="mt-2">
+//                     <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+//                       <div className="h-full bg-red-600 w-3/4"></div>
+//                     </div>
+//                     <p className="text-xs text-gray-400 mt-1">74% watched</p>
+//                   </div>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Popular on Netflix Section - Now Changed to Videos */}
+//         <div className="mb-15">
+//           <SectionHeader title="Top Shorts" />
+//           <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
+//             {koreanContent.map((item) => (
+//               <div 
+//                 key={item.id} 
+//                 onClick={() => handleItemClick(item)}
+//                 className="cursor-pointer group"
+//               >
+//                 <div className="relative aspect-video rounded-md overflow-hidden mb-2">
+//                   <img 
+//                     src={item.thumb} 
+//                     alt={item.title}
+//                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+//                   />
+//                   <div className="absolute top-2 right-2 bg-black/70 rounded px-2 py-1 text-xs">
+//                     #1
+//                   </div>
+//                 </div>
+//                 <h3 className="text-white text-sm font-medium truncate">{item.title}</h3>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+
+
+//           <div className="mb-10">
+//           <SectionHeader title="Trending Videos" />
+//           <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
+//             {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
+//               <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
+//                 <div className="relative">
+//                   <MovieCard item={item} onClick={handleItemClick} />
+//                   <div className="mt-2">
+//                     <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+//                       <div className="h-full bg-red-600 w-3/4"></div>
+//                     </div>
+//                     <p className="text-xs text-gray-400 mt-1">74% watched</p>
+//                   </div>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+
+//         <div className="mb-15">
+//           <SectionHeader title="Top Shorts" />
+//           <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
 //             {koreanContent.map((item) => (
 //               <div 
 //                 key={item.id} 
@@ -252,10 +308,8 @@ const romanticShows = [
   { id: 6, title: "Genie", thumb: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=225&fit=crop" },
 ];
 
-
 // Kids Films
 const kidsFilms = [
-  // { id: 101, title: "Chhota Bheem: Master of Shaolin", thumb: "https://images.unsplash.com/photo-1587049352846-4a222e784422?w=400&h=225&fit=crop" },
   { id: 102, title: "Chhota Bheem: Krishna", thumb: "https://images.unsplash.com/photo-1608889825103-eb5ed706fc64?w=400&h=225&fit=crop" },
   { id: 103, title: "The Rise of Kirmada", thumb: "https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=400&h=225&fit=crop" },
   { id: 104, title: "Journey to Petra", thumb: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&h=225&fit=crop" },
@@ -273,8 +327,6 @@ const koreanContent = [
   { id: 206, title: "Beyond the Bar", thumb: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=225&fit=crop" },
 ];
 
-
-
 function useWidth() {
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
   useEffect(() => {
@@ -284,8 +336,6 @@ function useWidth() {
   }, []);
   return width;
 }
-
-
 
 function SectionHeader({ title }) {
   return (
@@ -342,18 +392,9 @@ function MovieCard({ item, onClick }) {
           </div>
         </div>
       )}
-      
-      {/* Title always visible at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-transparent to-transparent">
-        <h3 className="text-white text-sm font-semibold truncate">{item.title}</h3>
-      </div>
     </div>
   );
 }
-
-
-
-
 
 export default function NetflixStylePage() {
   const navigate = useNavigate();
@@ -396,33 +437,30 @@ export default function NetflixStylePage() {
         }
       `}</style>
 
-      {/* <Navbar /> */}
-      
-      {/* <MainBanner /> */}
-
-      <div className="mx-auto max-w-screen-2xl px-4 pt-6 md:px-12 lg:px-16 -mt-32 relative z-10">
+      <div className="mx-auto max-w-screen-2xl px-4 pt-25 md:px-12 lg:px-16 -mt-24 relative z-10 pb-10">
         
-        {/* Romantic International TV Shows Section */}
-        <div className="mb-10">
-          {/* <SectionHeader title="Romantic International TV Shows" /> */}
-          {/* <ScrollableRow items={romanticShows} onItemClick={handleItemClick} /> */}
-        </div>
-
-        {/* Kids Films Section */}
-        <div className="mb-10">
-          <SectionHeader title="Kids Films" />
-          {/* <ScrollableRow items={kidsFilms} onItemClick={handleItemClick} /> */}
-        </div>
-
-        {/* Korean Movies & TV Section */}
-        <div className="mb-10">
-          {/* <SectionHeader title="Korean Movies & TV Dubbed in Hindi" /> */}
-          {/* <ScrollableRow items={koreanContent} onItemClick={handleItemClick} /> */}
-        </div>
-
         {/* Continue Watching Section */}
-        <div className="mb-10">
-          <SectionHeader title="Continue Watching" />
+        <div className="mb-8">
+          <SectionHeader title="Recommended Videos" />
+          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
+            {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
+              <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
+                <div className="relative">
+                  <MovieCard item={item} onClick={handleItemClick} />
+                  <div className="mt-2">
+                    <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-600 w-3/4"></div>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">74% watched</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+         <div className="mb-8">
+          <SectionHeader title="Trending Videos" />
           <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
             {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
               <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
@@ -441,9 +479,53 @@ export default function NetflixStylePage() {
         </div>
 
         {/* Popular on Netflix Section - Now Changed to Videos */}
-        <div className="mb-10">
-          <SectionHeader title="Videos" />
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="mb-12">
+          <SectionHeader title="Top Shorts" />
+          <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {koreanContent.map((item) => (
+              <div 
+                key={item.id} 
+                onClick={() => handleItemClick(item)}
+                className="cursor-pointer group"
+              >
+                <div className="relative aspect-video rounded-md overflow-hidden mb-2">
+                  <img 
+                    src={item.thumb} 
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-2 right-2 bg-black/70 rounded px-2 py-1 text-xs">
+                    #1
+                  </div>
+                </div>
+                <h3 className="text-white text-sm font-medium truncate">{item.title}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+
+          <div className="mb-8">
+          <SectionHeader title="Trending Videos" />
+          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
+            {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
+              <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
+                <div className="relative">
+                  <MovieCard item={item} onClick={handleItemClick} />
+                  <div className="mt-2">
+                    <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-600 w-3/4"></div>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">74% watched</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-12">
+          <SectionHeader title="Top Shorts" />
+          <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {koreanContent.map((item) => (
               <div 
                 key={item.id} 
@@ -467,8 +549,6 @@ export default function NetflixStylePage() {
         </div>
 
       </div>
-
-     
     </div>
   );
 }
