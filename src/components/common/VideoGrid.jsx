@@ -548,6 +548,25 @@ export default function NetflixStylePage() {
           </div>
         </div>
 
+
+ <div className="mb-8">
+          <SectionHeader title="Subscription Videos" />
+          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide hover:scrollbar-show">
+            {[...romanticShows.slice(0, 3), ...kidsFilms.slice(0, 2), ...koreanContent.slice(0, 2)].map((item) => (
+              <div key={item.id} className="flex-shrink-0 w-[240px] md:w-[280px]">
+                <div className="relative">
+                  <MovieCard item={item} onClick={handleItemClick} />
+                  <div className="mt-2">
+                    <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-600 w-3/4"></div>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">74% watched</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
