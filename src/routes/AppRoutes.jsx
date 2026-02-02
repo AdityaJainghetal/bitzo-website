@@ -19,7 +19,7 @@ import AuthPage from "../pages/Login.jsx/AuthPage";
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* <Route path="/login" element={<AuthPage />} /> */}
+      <Route path="/login" element={<AuthPage />} />
       {/* <Route path="/register" element={<AuthPage />} /> */}
 
       {/* 🔐 Protected Routes */}
