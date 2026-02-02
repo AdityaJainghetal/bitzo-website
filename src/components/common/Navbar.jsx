@@ -105,7 +105,7 @@ export default function Navbar({ toggleSidebar }) {
           </button>
 
           <div className="flex items-center gap-3">
-            <span className="text-red-600 text-3xl font-bold">Bitzo</span>
+            <span className="text-red-600 text-3xl font-bold">Vidoo</span>
 
             {/* Points display */}
             <div className="hidden sm:flex items-center gap-1.5 bg-[#272727] px-3 py-1 rounded-full border border-yellow-600/30">
