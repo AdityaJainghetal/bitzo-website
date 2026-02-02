@@ -23,7 +23,7 @@ export default function AppRoutes() {
       {/* <Route path="/register" element={<AuthPage />} /> */}
 
       {/* 🔐 Protected Routes */}
-      {/* <Route element={<ProtectedLayout />}> */}
+      <Route element={<ProtectedLayout />}>
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="shorts" element={<Shorts />} />
@@ -35,7 +35,7 @@ export default function AppRoutes() {
           <Route path="video/:id" element={<FullVideo />} />
           <Route path="profile" element={<Profile />} />
         </Route>
-      {/* </Route> */}
+      </Route>
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
