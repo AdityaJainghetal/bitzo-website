@@ -17,10 +17,10 @@ export default function WithdrawPage() {
   // Available withdraw methods (you can expand)
   const methods = [
     { id: 'upi', name: 'UPI (Google Pay / PhonePe)', min: 5, fee: 0 },
-    { id: 'paypal', name: 'PayPal', min: 10, fee: 2.9 },
+    { id: 'paypal', name: 'Cash', min: 10, fee: 2.9 },
     { id: 'bank', name: 'Bank Transfer', min: 20, fee: 1.5 },
   ];
-
+``
   const handleCopyUPI = () => {
     navigator.clipboard.writeText('aditya@upi'); // replace with real UPI ID
     setCopied(true);

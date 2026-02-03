@@ -18,6 +18,8 @@ import WatchHistoryTab from "../pages/Settings/WatchHistoryTab";
 import LikedVideosTab from "../pages/Settings/LikedVideosTab";
 import YourVideosTab from "../pages/Settings/YourVideosTab";
 import WatchLaterTab from "../pages/Settings/WatchLaterTab";
+import ChannelPage from "../components/channels/ChannelPage";
+import ChannelCustomization from "../components/channels/ChannelCustomization";
 
 export default function AppRoutes() {
   return (
@@ -25,7 +27,7 @@ export default function AppRoutes() {
       <Route path="/login" element={<AuthPage />} />
       {/* <Route path="/register" element={<AuthPage />} /> */}
 
-      {/* 🔐 Protected Routes */}
+      
       <Route element={<ProtectedLayout />}>
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
@@ -43,6 +45,8 @@ export default function AppRoutes() {
           <Route path="/watch-later" element={<WatchLaterTab />} />
           <Route path="/your-videos" element={<YourVideosTab />} />
           <Route path="/withdraw" element={<WithdrawPage />} />
+          <Route path="/channel/:handle" element={<ChannelPage />} />
+          <Route path="/channel/customize" element={<ChannelCustomization />}/>
         </Route>
       </Route>
 

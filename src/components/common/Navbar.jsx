@@ -1,226 +1,289 @@
+// // import React, { useState, useRef, useEffect } from 'react';
+// // import { Link, useNavigate } from 'react-router-dom';
+// // import {
+// //   Menu,
+// //   Search,
+// //   Mic,
+// //   Plus,
+// //   Bell,
+// //   Star,
+// //   User,
+// //   Settings,
+// //   LogOut,
+// //   Wallet,
+// //   History,
+// //   Heart,
+// //   Clock,
+// //   Video,
+// //   ChevronRight,
+// //   ChevronDown,
+// // } from 'lucide-react';
+// // import { useRewards } from '../../context/RewardContext';
 
+// // export default function Navbar({ toggleSidebar }) {
+// //   const { points } = useRewards();
+// //   const navigate = useNavigate();
 
-// // src/common/Navbar.jsx
-// import React, { useState, useRef, useEffect } from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
-// import {
-//   Menu,
-//   Search,
-//   Mic,
-//   Plus,
-//   Bell,
-//   Star,
-//   User,
-//   Settings,
-//   LogOut,
-//   Wallet,
-// } from 'lucide-react';
-// import { useRewards } from '../../context/RewardContext';
+// //   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+// //   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+// //   const dropdownRef = useRef(null);
 
-// export default function Navbar({ toggleSidebar }) {
-//   const { points } = useRewards();
-//   const navigate = useNavigate();
+// //   // Auth state
+// //   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('token')));
+// //   const [user, setUser] = useState(() => {
+// //     try {
+// //       return JSON.parse(localStorage.getItem('user')) || null;
+// //     } catch {
+// //       return null;
+// //     }
+// //   });
 
-//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-//   const dropdownRef = useRef(null);
+// //   // Close dropdown on outside click
+// //   useEffect(() => {
+// //     const handleClickOutside = (event) => {
+// //       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+// //         setIsDropdownOpen(false);
+// //         setIsSettingsOpen(false);
+// //       }
+// //     };
+// //     document.addEventListener('mousedown', handleClickOutside);
+// //     return () => document.removeEventListener('mousedown', handleClickOutside);
+// //   }, []);
 
-//   // Auth state (read from localStorage token)
-//   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('token')));
-//   const [user, setUser] = useState(() => {
-//     try {
-//       return JSON.parse(localStorage.getItem('user')) || null;
-//     } catch {
-//       return null;
-//     }
-//   });
+// //   const toggleDropdown = () => {
+// //     setIsDropdownOpen((prev) => !prev);
+// //     setIsSettingsOpen(false);
+// //   };
 
-//   // Close dropdown when clicking outside
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-//         setIsDropdownOpen(false);
-//       }
-//     };
-//     document.addEventListener('mousedown', handleClickOutside);
-//     return () =>
-//       document.removeEventListener('mousedown', handleClickOutside);
-//   }, []);
+// //   // Sync auth state across tabs/windows
+// //   useEffect(() => {
+// //     const loadUser = () => {
+// //       try {
+// //         const u = JSON.parse(localStorage.getItem('user'));
+// //         setUser(u);
+// //         setIsLoggedIn(Boolean(localStorage.getItem('token')));
+// //       } catch {
+// //         setUser(null);
+// //         setIsLoggedIn(false);
+// //       }
+// //     };
 
-//   const toggleDropdown = () => {
-//     setIsDropdownOpen((prev) => !prev);
-//   };
+// //     loadUser();
+// //     window.addEventListener('auth-change', loadUser);
+// //     window.addEventListener('storage', loadUser);
 
-//   // Sync user state from localStorage and listen to auth changes
-//   useEffect(() => {
-//     const loadUser = () => {
-//       try {
-//         const u = JSON.parse(localStorage.getItem('user'));
-//         setUser(u);
-//         setIsLoggedIn(Boolean(localStorage.getItem('token')));
-//       } catch {
-//         setUser(null);
-//         setIsLoggedIn(false);
-//       }
-//     };
+// //     return () => {
+// //       window.removeEventListener('auth-change', loadUser);
+// //       window.removeEventListener('storage', loadUser);
+// //     };
+// //   }, []);
 
-//     // initial load
-//     loadUser();
+// //   const handleSignOut = () => {
+// //     localStorage.removeItem('token');
+// //     localStorage.removeItem('user');
+// //     setUser(null);
+// //     setIsLoggedIn(false);
+// //     window.dispatchEvent(new Event('auth-change'));
+// //     setIsDropdownOpen(false);
+// //     setIsSettingsOpen(false);
+// //     navigate('/login');
+// //   };
 
-//     // listen to custom auth events and cross-window storage events
-//     window.addEventListener('auth-change', loadUser);
-//     window.addEventListener('storage', loadUser);
+// //   return (
+// //     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f] border-b border-gray-800 h-14 flex items-center">
+// //       <div className="flex items-center justify-between w-full px-4">
+// //         {/* Left side */}
+// //         <div className="flex items-center gap-4 md:gap-6">
+// //           <button
+// //             onClick={toggleSidebar}
+// //             className="p-2 hover:bg-[#272727] rounded-full transition-colors"
+// //           >
+// //             <Menu size={24} className="text-white" />
+// //           </button>
 
-//     return () => {
-//       window.removeEventListener('auth-change', loadUser);
-//       window.removeEventListener('storage', loadUser);
-//     };
-//   }, []);
+// //           <div className="flex items-center gap-3">
+// //             <span className="text-red-600 text-3xl font-bold">Vidoo</span>
 
-//   // Sign out handler → clear storage and redirect to /login
-//   const handleSignOut = () => {
-//     // Clear auth from localStorage
-//     localStorage.removeItem('token');
-//     localStorage.removeItem('user');
+// //             <div className="hidden sm:flex items-center gap-1.5 bg-[#272727] px-3 py-1 rounded-full border border-yellow-600/30">
+// //               <Star size={18} className="text-yellow-400 fill-yellow-400" />
+// //               <span className="text-white font-semibold text-sm">
+// //                 {points.toFixed(2)}
+// //               </span>
+// //               <span className="text-gray-400 text-xs">pts</span>
+// //             </div>
+// //           </div>
+// //         </div>
 
-//     setUser(null);
-//     setIsLoggedIn(false);
+// //         {/* Center: Search */}
+// //         <div className="flex-1 max-w-2xl mx-8 hidden md:flex">
+// //           <div className="relative w-full">
+// //             <input
+// //               type="text"
+// //               placeholder="Search"
+// //               className="w-full bg-[#121212] border border-gray-700 rounded-l-full py-2 px-5 focus:outline-none focus:border-blue-500 text-white placeholder-gray-400"
+// //             />
+// //             <button className="absolute right-0 top-0 bottom-0 bg-[#222] px-6 rounded-r-full border border-gray-700 border-l-0 hover:bg-[#333] transition-colors">
+// //               <Search size={20} className="text-gray-300" />
+// //             </button>
+// //           </div>
+// //         </div>
 
-//     // notify other listeners
-//     window.dispatchEvent(new Event('auth-change'));
+// //         {/* Right side */}
+// //         <div className="flex items-center gap-4 sm:gap-6">
+// //           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
+// //             <Mic size={22} className="text-white" />
+// //           </button>
 
-//     setIsDropdownOpen(false);
-//     navigate('/login');
-//   };
+// //           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors">
+// //             <Plus size={22} className="text-white" />
+// //           </button>
 
-//   return (
-//     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f] border-b border-gray-800 h-14 flex items-center">
-//       <div className="flex items-center justify-between w-full px-4">
-//         {/* Left: Hamburger + Logo + Points */}
-//         <div className="flex items-center gap-4 md:gap-6">
-//           <button
-//             onClick={toggleSidebar}
-//             className="p-2 hover:bg-[#272727] rounded-full transition-colors"
-//           >
-//             <Menu size={24} className="text-white" />
-//           </button>
+// //           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
+// //             <Bell size={22} className="text-white" />
+// //           </button>
 
-//           <div className="flex items-center gap-3">
-//             <span className="text-red-600 text-3xl font-bold">Vidoo</span>
+// //           {/* Profile dropdown */}
+// //           <div className="relative" ref={dropdownRef}>
+// //             {isLoggedIn ? (
+// //               <button
+// //                 onClick={toggleDropdown}
+// //                 className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition-all"
+// //               >
+// //                 <span className="text-white text-sm font-semibold">
+// //                   {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
+// //                 </span>
+// //               </button>
+// //             ) : (
+// //               <button
+// //                 onClick={() => navigate('/login')}
+// //                 className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition"
+// //               >
+// //                 Sign in
+// //               </button>
+// //             )}
 
-//             {/* Points display */}
-//             <div className="hidden sm:flex items-center gap-1.5 bg-[#272727] px-3 py-1 rounded-full border border-yellow-600/30">
-//               <Star size={18} className="text-yellow-400 fill-yellow-400" />
-//               <span className="text-white font-semibold text-sm">
-//                 {points.toFixed(2)}
-//               </span>
-//               <span className="text-gray-400 text-xs">pts</span>
-//             </div>
-//           </div>
-//         </div>
+// //             {isLoggedIn && isDropdownOpen && (
+// //               <div className="absolute right-0 mt-3 w-72 bg-[#1f1f1f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
+// //                 {/* User info */}
+// //                 <div className="px-4 py-3 border-b border-gray-700">
+// //                   <p className="font-medium text-white">{user?.name || 'Aditya'}</p>
+// //                   <p className="text-sm text-gray-400">{user?.email || 'aditya@example.com'}</p>
+// //                   <div className="flex items-center justify-between mt-1">
+// //                     <p className="text-xs text-gray-400">Role: {user?.role || 'creator'}</p>
+// //                     <p className="text-xs text-yellow-400">★ {points.toFixed(2)} pts</p>
+// //                   </div>
+// //                 </div>
 
-//         {/* Center: Search bar */}
-//         <div className="flex-1 max-w-2xl mx-8 hidden md:flex">
-//           <div className="relative w-full">
-//             <input
-//               type="text"
-//               placeholder="Search"
-//               className="w-full bg-[#121212] border border-gray-700 rounded-l-full py-2 px-5 focus:outline-none focus:border-blue-500 text-white placeholder-gray-400"
-//             />
-//             <button className="absolute right-0 top-0 bottom-0 bg-[#222] px-6 rounded-r-full border border-gray-700 border-l-0 hover:bg-[#333] transition-colors">
-//               <Search size={20} className="text-gray-300" />
-//             </button>
-//           </div>
-//         </div>
+// //                 {/* Menu items */}
+// //                 <div className="py-2">
+// //                   <button
+// //                     onClick={() => {
+// //                       navigate('/profile'); // ← your channel page
+// //                       setIsDropdownOpen(false);
+// //                     }}
+// //                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
+// //                   >
+// //                     <User size={18} />
+// //                     <span>Your channel</span>
+// //                   </button>
 
-//         {/* Right: Icons + Profile */}
-//         <div className="flex items-center gap-4 sm:gap-6">
-//           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
-//             <Mic size={22} className="text-white" />
-//           </button>
+// //                   {/* Settings → sub-menu */}
+// //                   <div className="relative">
+// //                     <button
+// //                       onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+// //                       className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center justify-between transition text-white"
+// //                     >
+// //                       <div className="flex items-center gap-3">
+// //                         <Settings size={18} />
+// //                         <span>Settings</span>
+// //                       </div>
+// //                       {isSettingsOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+// //                     </button>
 
-//           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors">
-//             <Plus size={22} className="text-white" />
-//           </button>
+// //                     {isSettingsOpen && (
+// //                       <div className="ml-4 mt-1 mb-1 bg-[#181818] rounded-lg overflow-hidden border border-gray-700">
+// //                         <button
+// //                           onClick={() => {
+// //                             navigate('/history');
+// //                             setIsDropdownOpen(false);
+// //                             setIsSettingsOpen(false);
+// //                           }}
+// //                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+// //                         >
+// //                           <History size={16} />
+// //                           <span>History</span>
+// //                         </button>
 
-//           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
-//             <Bell size={22} className="text-white" />
-//           </button>
+// //                         <button
+// //                           onClick={() => {
+// //                             navigate('/liked-videos');
+// //                             setIsDropdownOpen(false);
+// //                             setIsSettingsOpen(false);
+// //                           }}
+// //                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+// //                         >
+// //                           <Heart size={16} />
+// //                           <span>Liked Videos</span>
+// //                         </button>
 
-//           {/* Profile / Dropdown */}
-//           <div className="relative" ref={dropdownRef}>
-//             {isLoggedIn ? (
-//               <button
-//                 onClick={toggleDropdown}
-//                 className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition-all"
-//               >
-//                 <span className="text-white text-sm font-semibold">{user?.name ? user.name.charAt(0).toUpperCase() : 'A'}</span>
-//               </button>
-//             ) : (
-//               <button onClick={() => navigate('/login')} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition">
-//                 Sign in
-//               </button>
-//             )}
+// //                         <button
+// //                           onClick={() => {
+// //                             navigate('/watch-later');
+// //                             setIsDropdownOpen(false);
+// //                             setIsSettingsOpen(false);
+// //                           }}
+// //                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+// //                         >
+// //                           <Clock size={16} />
+// //                           <span>Watch Later</span>
+// //                         </button>
 
-//             {/* Dropdown Menu */}
-//             {isLoggedIn && isDropdownOpen && (
-//               <div className="absolute right-0 mt-3 w-64 bg-[#1f1f1f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
-//                 {/* Profile header */}
-//                 <div className="px-4 py-3 border-b border-gray-700">
-//                   <p className="font-medium text-white">{user?.name || 'Aditya'}</p>
-//                   <p className="text-sm text-gray-400">{user?.email || 'aditya@example.com'}</p>
-//                   <div className="flex items-center justify-between mt-1">
-//                     <p className="text-xs text-gray-400">Role: {user?.role || 'creator'}</p>
-//                     <p className="text-xs text-yellow-400">★ {points.toFixed(2)} pts</p>
-//                   </div>
-//                 </div>
+// //                         <button
+// //                           onClick={() => {
+// //                             navigate('/your-videos');
+// //                             setIsDropdownOpen(false);
+// //                             setIsSettingsOpen(false);
+// //                           }}
+// //                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+// //                         >
+// //                           <Video size={16} />
+// //                           <span>Your Videos</span>
+// //                         </button>
+// //                       </div>
+// //                     )}
+// //                   </div>
 
-//                 {/* Menu items */}
-//                 <div className="py-2">
-//                   <button className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white">
-//                     <User size={18} />
-//                     <span>Your channel</span>
-//                   </button>
+// //                   <Link
+// //                     to="/withdraw"
+// //                     onClick={() => {
+// //                       setIsDropdownOpen(false);
+// //                       setIsSettingsOpen(false);
+// //                     }}
+// //                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
+// //                   >
+// //                     <Wallet size={18} />
+// //                     <span>Withdraw Rewards</span>
+// //                   </Link>
+// //                 </div>
 
-//                   <button className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white">
-//                     <Settings size={18} />
-//                     <span>Settings</span>
-//                   </button>
-
-//                   <Link
-//                     to="/withdraw"
-//                     onClick={() => setIsDropdownOpen(false)}
-//                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
-//                   >
-//                     <Wallet size={18} />
-//                     <span>Withdraw Rewards</span>
-//                   </Link>
-//                 </div>
-
-//                 {/* Sign out */}
-//                 <div className="border-t border-gray-700">
-//                   <button
-//                     onClick={handleSignOut}
-//                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 text-red-400 transition"
-//                   >
-//                     <LogOut size={18} />
-//                     <span>Sign out</span>
-//                   </button>
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </header>
-//   );
-// }
-
-// src/common/Navbar.jsx
-
-
-
-
-
+// //                 {/* Sign out */}
+// //                 <div className="border-t border-gray-700">
+// //                   <button
+// //                     onClick={handleSignOut}
+// //                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 text-red-400 transition"
+// //                   >
+// //                     <LogOut size={18} />
+// //                     <span>Sign out</span>
+// //                   </button>
+// //                 </div>
+// //               </div>
+// //             )}
+// //           </div>
+// //         </div>
+// //       </div>
+// //     </header>
+// //   );
+// // }
 
 // import React, { useState, useRef, useEffect } from 'react';
 // import { Link, useNavigate } from 'react-router-dom';
@@ -252,7 +315,7 @@
 //   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 //   const dropdownRef = useRef(null);
 
-//   // Auth state (read from localStorage token)
+//   // Auth state
 //   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('token')));
 //   const [user, setUser] = useState(() => {
 //     try {
@@ -262,7 +325,7 @@
 //     }
 //   });
 
-//   // Close dropdown when clicking outside
+//   // Close dropdown on outside click
 //   useEffect(() => {
 //     const handleClickOutside = (event) => {
 //       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -271,8 +334,7 @@
 //       }
 //     };
 //     document.addEventListener('mousedown', handleClickOutside);
-//     return () =>
-//       document.removeEventListener('mousedown', handleClickOutside);
+//     return () => document.removeEventListener('mousedown', handleClickOutside);
 //   }, []);
 
 //   const toggleDropdown = () => {
@@ -280,11 +342,7 @@
 //     setIsSettingsOpen(false);
 //   };
 
-//   const toggleSettings = () => {
-//     setIsSettingsOpen((prev) => !prev);
-//   };
-
-//   // Sync user state from localStorage and listen to auth changes
+//   // Sync auth state across tabs/windows
 //   useEffect(() => {
 //     const loadUser = () => {
 //       try {
@@ -297,10 +355,7 @@
 //       }
 //     };
 
-//     // initial load
 //     loadUser();
-
-//     // listen to custom auth events and cross-window storage events
 //     window.addEventListener('auth-change', loadUser);
 //     window.addEventListener('storage', loadUser);
 
@@ -310,34 +365,21 @@
 //     };
 //   }, []);
 
-//   // Sign out handler → clear storage and redirect to /login
 //   const handleSignOut = () => {
-//     // Clear auth from localStorage
 //     localStorage.removeItem('token');
 //     localStorage.removeItem('user');
-
 //     setUser(null);
 //     setIsLoggedIn(false);
-
-//     // notify other listeners
 //     window.dispatchEvent(new Event('auth-change'));
-
 //     setIsDropdownOpen(false);
 //     setIsSettingsOpen(false);
 //     navigate('/login');
 //   };
 
-//   // Handle navigation for settings options
-//   const handleSettingsNavigation = (path) => {
-//     navigate(path);
-//     setIsDropdownOpen(false);
-//     setIsSettingsOpen(false);
-//   };
-
 //   return (
 //     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f] border-b border-gray-800 h-14 flex items-center">
 //       <div className="flex items-center justify-between w-full px-4">
-//         {/* Left: Hamburger + Logo + Points */}
+//         {/* Left side */}
 //         <div className="flex items-center gap-4 md:gap-6">
 //           <button
 //             onClick={toggleSidebar}
@@ -349,7 +391,6 @@
 //           <div className="flex items-center gap-3">
 //             <span className="text-red-600 text-3xl font-bold">Vidoo</span>
 
-//             {/* Points display */}
 //             <div className="hidden sm:flex items-center gap-1.5 bg-[#272727] px-3 py-1 rounded-full border border-yellow-600/30">
 //               <Star size={18} className="text-yellow-400 fill-yellow-400" />
 //               <span className="text-white font-semibold text-sm">
@@ -360,7 +401,7 @@
 //           </div>
 //         </div>
 
-//         {/* Center: Search bar */}
+//         {/* Center: Search */}
 //         <div className="flex-1 max-w-2xl mx-8 hidden md:flex">
 //           <div className="relative w-full">
 //             <input
@@ -374,7 +415,7 @@
 //           </div>
 //         </div>
 
-//         {/* Right: Icons + Profile */}
+//         {/* Right side */}
 //         <div className="flex items-center gap-4 sm:gap-6">
 //           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
 //             <Mic size={22} className="text-white" />
@@ -388,87 +429,127 @@
 //             <Bell size={22} className="text-white" />
 //           </button>
 
-//           {/* Profile / Dropdown */}
+//           {/* Profile dropdown */}
 //           <div className="relative" ref={dropdownRef}>
 //             {isLoggedIn ? (
 //               <button
 //                 onClick={toggleDropdown}
 //                 className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition-all"
 //               >
-//                 <span className="text-white text-sm font-semibold">{user?.name ? user.name.charAt(0).toUpperCase() : 'A'}</span>
+//                 <span className="text-white text-sm font-semibold">
+//                   {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
+//                 </span>
 //               </button>
 //             ) : (
-//               <button onClick={() => navigate('/login')} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition">
+//               <button
+//                 onClick={() => navigate('/login')}
+//                 className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition"
+//               >
 //                 Sign in
 //               </button>
 //             )}
 
-//             {/* Dropdown Menu */}
 //             {isLoggedIn && isDropdownOpen && (
-//               <div className="absolute right-0 mt-3 w-72 bg-[#1f1f1f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
-//                 {/* Profile header */}
-//                 <div className="px-4 py-3 border-b border-gray-700">
-//                   <p className="font-medium text-white">{user?.name || 'Aditya'}</p>
-//                   <p className="text-sm text-gray-400">{user?.email || 'aditya@example.com'}</p>
-//                   <div className="flex items-center justify-between mt-1">
-//                     <p className="text-xs text-gray-400">Role: {user?.role || 'creator'}</p>
-//                     <p className="text-xs text-yellow-400">★ {points.toFixed(2)} pts</p>
+//               <div className="absolute right-0 mt-3 w-80 bg-[#0f0f0f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50 text-white">
+//                 {/* User info header */}
+//                 <div className="px-5 py-5 border-b border-gray-800">
+//                   <div className="flex items-start gap-4">
+//                     <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+//                       <span className="text-2xl font-semibold">
+//                         {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
+//                       </span>
+//                     </div>
+//                     <div className="flex-1">
+//                       <p className="text-lg font-medium">{user?.name || 'Aditya Jain ghetal'}</p>
+//                       <p className="text-sm text-gray-400 mt-0.5">
+//                         @{user?.username || 'adityajain ghetal3503'}
+//                       </p>
+//                       <button
+//                         onClick={() => {
+//                           navigate('/profile');
+//                           setIsDropdownOpen(false);
+//                         }}
+//                         className="mt-3 w-full py-2 bg-[#272727] hover:bg-[#3a3a3a] rounded text-sm font-medium transition-colors"
+//                       >
+//                         View your channel
+//                       </button>
+//                     </div>
 //                   </div>
 //                 </div>
 
-//                 {/* Menu items */}
+//                 {/* Main menu items */}
 //                 <div className="py-2">
-//                   <button className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white">
-//                     <User size={18} />
+//                   <button
+//                     onClick={() => {
+//                       navigate('/profile');
+//                       setIsDropdownOpen(false);
+//                     }}
+//                     className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
+//                   >
+//                     <User size={20} className="text-gray-300" />
 //                     <span>Your channel</span>
 //                   </button>
 
-//                   {/* Settings with sub-menu */}
+//                   {/* Settings sub-menu (restored to original) */}
 //                   <div className="relative">
 //                     <button
-//                       onClick={toggleSettings}
-//                       className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center justify-between transition text-white"
+//                       onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+//                       className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center justify-between transition"
 //                     >
-//                       <div className="flex items-center gap-3">
-//                         <Settings size={18} />
+//                       <div className="flex items-center gap-4">
+//                         <Settings size={20} className="text-gray-300" />
 //                         <span>Settings</span>
 //                       </div>
-//                       {isSettingsOpen ? (
-//                         <ChevronDown size={16} />
-//                       ) : (
-//                         <ChevronRight size={16} />
-//                       )}
+//                       {isSettingsOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
 //                     </button>
 
-//                     {/* Settings sub-menu */}
 //                     {isSettingsOpen && (
-//                       <div className="ml-4 mt-1 mb-1 bg-[#181818] rounded-lg overflow-hidden border border-gray-700">
+//                       <div className="bg-[#1a1a1a] border-t border-gray-800 py-1">
 //                         <button
-//                           onClick={() => handleSettingsNavigation('/history')}
-//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                           onClick={() => {
+//                             navigate('/history');
+//                             setIsDropdownOpen(false);
+//                             setIsSettingsOpen(false);
+//                           }}
+//                           className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
 //                         >
-//                           <History size={16} />
+//                           <History size={18} />
 //                           <span>History</span>
 //                         </button>
+
 //                         <button
-//                           onClick={() => handleSettingsNavigation('/liked-videos')}
-//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                           onClick={() => {
+//                             navigate('/liked-videos');
+//                             setIsDropdownOpen(false);
+//                             setIsSettingsOpen(false);
+//                           }}
+//                           className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
 //                         >
-//                           <Heart size={16} />
+//                           <Heart size={18} />
 //                           <span>Liked Videos</span>
 //                         </button>
+
 //                         <button
-//                           onClick={() => handleSettingsNavigation('/watch-later')}
-//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                           onClick={() => {
+//                             navigate('/watch-later');
+//                             setIsDropdownOpen(false);
+//                             setIsSettingsOpen(false);
+//                           }}
+//                           className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
 //                         >
-//                           <Clock size={16} />
+//                           <Clock size={18} />
 //                           <span>Watch Later</span>
 //                         </button>
+
 //                         <button
-//                           onClick={() => handleSettingsNavigation('/your-videos')}
-//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                           onClick={() => {
+//                             navigate('/your-videos');
+//                             setIsDropdownOpen(false);
+//                             setIsSettingsOpen(false);
+//                           }}
+//                           className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
 //                         >
-//                           <Video size={16} />
+//                           <Video size={18} />
 //                           <span>Your Videos</span>
 //                         </button>
 //                       </div>
@@ -481,20 +562,20 @@
 //                       setIsDropdownOpen(false);
 //                       setIsSettingsOpen(false);
 //                     }}
-//                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
+//                     className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition border-t border-gray-800 mt-1 pt-2"
 //                   >
-//                     <Wallet size={18} />
+//                     <Wallet size={20} className="text-gray-300" />
 //                     <span>Withdraw Rewards</span>
 //                   </Link>
 //                 </div>
 
-//                 {/* Sign out */}
-//                 <div className="border-t border-gray-700">
+//                 {/* Sign out section */}
+//                 <div className="border-t border-gray-800 py-2">
 //                   <button
 //                     onClick={handleSignOut}
-//                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 text-red-400 transition"
+//                     className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 text-red-400 transition"
 //                   >
-//                     <LogOut size={18} />
+//                     <LogOut size={20} />
 //                     <span>Sign out</span>
 //                   </button>
 //                 </div>
@@ -526,6 +607,10 @@ import {
   Video,
   ChevronRight,
   ChevronDown,
+  HelpCircle,
+  MessageSquare,
+  Crown,
+  DollarSign,
 } from 'lucide-react';
 import { useRewards } from '../../context/RewardContext';
 
@@ -643,15 +728,18 @@ export default function Navbar({ toggleSidebar }) {
             <Mic size={22} className="text-white" />
           </button>
 
-          <button className="p-2 hover:bg-[#272727] rounded-full transition-colors">
-            <Plus size={22} className="text-white" />
-          </button>
+       <Link
+  to="/uploadvideo"
+  className="p-2 hover:bg-[#272727] rounded-full transition-colors flex items-center justify-center"
+>
+  <Plus size={22} className="text-white" />
+</Link>
 
           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
             <Bell size={22} className="text-white" />
           </button>
 
-          {/* Profile dropdown */}
+          {/* Profile dropdown – Enhanced */}
           <div className="relative" ref={dropdownRef}>
             {isLoggedIn ? (
               <button
@@ -672,90 +760,118 @@ export default function Navbar({ toggleSidebar }) {
             )}
 
             {isLoggedIn && isDropdownOpen && (
-              <div className="absolute right-0 mt-3 w-72 bg-[#1f1f1f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
-                {/* User info */}
-                <div className="px-4 py-3 border-b border-gray-700">
-                  <p className="font-medium text-white">{user?.name || 'Aditya'}</p>
-                  <p className="text-sm text-gray-400">{user?.email || 'aditya@example.com'}</p>
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-xs text-gray-400">Role: {user?.role || 'creator'}</p>
-                    <p className="text-xs text-yellow-400">★ {points.toFixed(2)} pts</p>
+              <div className="absolute right-0 mt-3 w-80 bg-[#0f0f0f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50 text-white">
+                {/* Enhanced User Header */}
+                <div className="px-5 py-5 border-b border-gray-800 bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f]">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                      <span className="text-2xl font-bold">
+                        {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-lg font-semibold">{user?.name || 'Aditya Jain ghetal'}</p>
+                      <p className="text-sm text-gray-400 mt-0.5">
+                        @{user?.username || 'adityajainghetal3503'}
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-1 text-xs text-yellow-400">
+                        <Star size={14} className="fill-yellow-400" />
+                        <span>{points.toFixed(0)} pts</span>
+                      </div>
+                      <button
+                        onClick={() => {
+                          navigate(`/channel/${user?.username || 'adityajainghetal3503'}`);
+                          setIsDropdownOpen(false);
+                        }}
+                        className="mt-3 w-full py-2 bg-[#272727] hover:bg-[#3a3a3a] rounded text-sm font-medium transition-colors"
+                      >
+                        View your channel
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Menu items */}
-                <div className="py-2">
+                {/* Main Navigation Items */}
+                <div className="py-1">
                   <button
                     onClick={() => {
-                      navigate('/profile'); // ← your channel page
+                      navigate('/profile');
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
                   >
-                    <User size={18} />
+                    <User size={20} className="text-gray-300" />
                     <span>Your channel</span>
                   </button>
 
-                  {/* Settings → sub-menu */}
+                  <button
+                    onClick={() => {
+                      navigate('/studio'); // or '/creator-dashboard'
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
+                  >
+                    <Video size={20} className="text-gray-300" />
+                    <span>Vidoo Studio</span>
+                  </button>
+
+                  {/* Settings Sub-menu – Original */}
                   <div className="relative">
                     <button
                       onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                      className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center justify-between transition text-white"
+                      className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center justify-between transition"
                     >
-                      <div className="flex items-center gap-3">
-                        <Settings size={18} />
+                      <div className="flex items-center gap-4">
+                        <Settings size={20} className="text-gray-300" />
                         <span>Settings</span>
                       </div>
-                      {isSettingsOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                      {isSettingsOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                     </button>
 
                     {isSettingsOpen && (
-                      <div className="ml-4 mt-1 mb-1 bg-[#181818] rounded-lg overflow-hidden border border-gray-700">
+                      <div className="bg-[#1a1a1a] border-t border-b border-gray-800 py-1">
                         <button
                           onClick={() => {
                             navigate('/history');
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
-                          className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+                          className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
                         >
-                          <History size={16} />
+                          <History size={18} />
                           <span>History</span>
                         </button>
-
                         <button
                           onClick={() => {
                             navigate('/liked-videos');
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
-                          className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+                          className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
                         >
-                          <Heart size={16} />
+                          <Heart size={18} />
                           <span>Liked Videos</span>
                         </button>
-
                         <button
                           onClick={() => {
                             navigate('/watch-later');
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
-                          className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+                          className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
                         >
-                          <Clock size={16} />
+                          <Clock size={18} />
                           <span>Watch Later</span>
                         </button>
-
                         <button
                           onClick={() => {
                             navigate('/your-videos');
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
-                          className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+                          className="w-full px-9 py-2.5 text-left hover:bg-[#272727] flex items-center gap-4 text-sm transition"
                         >
-                          <Video size={16} />
+                          <Video size={18} />
                           <span>Your Videos</span>
                         </button>
                       </div>
@@ -768,20 +884,69 @@ export default function Navbar({ toggleSidebar }) {
                       setIsDropdownOpen(false);
                       setIsSettingsOpen(false);
                     }}
-                    className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition border-t border-gray-800 mt-1"
                   >
-                    <Wallet size={18} />
+                    <Wallet size={20} className="text-gray-300" />
                     <span>Withdraw Rewards</span>
                   </Link>
                 </div>
 
-                {/* Sign out */}
-                <div className="border-t border-gray-700">
+                {/* Premium / Purchases Section */}
+                <div className="py-1 border-t border-gray-800">
+                  <button
+                    onClick={() => {
+                      navigate('/premium');
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition text-yellow-400"
+                  >
+                    <Crown size={20} className="text-yellow-400" />
+                    <span>Get Vidoo Premium</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      navigate('/purchases');
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
+                  >
+                    <DollarSign size={20} className="text-gray-300" />
+                    <span>Purchases & memberships</span>
+                  </button>
+                </div>
+
+                {/* Bottom Help & Feedback */}
+                <div className="py-1 border-t border-gray-800">
+                  <button
+                    onClick={() => {
+                      // Could open modal or external link
+                      window.open('https://help.vidoo.com', '_blank');
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
+                  >
+                    <HelpCircle size={20} className="text-gray-300" />
+                    <span>Help</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      // Could open feedback form
+                      navigate('/feedback');
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
+                  >
+                    <MessageSquare size={20} className="text-gray-300" />
+                    <span>Send feedback</span>
+                  </button>
+
                   <button
                     onClick={handleSignOut}
-                    className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 text-red-400 transition"
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 text-red-400 transition border-t border-gray-800 mt-1"
                   >
-                    <LogOut size={18} />
+                    <LogOut size={20} />
                     <span>Sign out</span>
                   </button>
                 </div>

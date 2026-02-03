@@ -293,7 +293,7 @@ export default function FullVideo() {
   ];
 
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="bg-black text-white min-h-screen pt-3 pr-0 md:pr-0 lg:pr-0 xl:pr-0 2xl:pr-0">
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;

@@ -4,7 +4,19 @@ import React from 'react';
 const topics = [
   'For you',
   'Trending',
-  'Earning Tips'
+  'Earning Tips',
+  'Tech Reviews',
+  'Comedy',
+  'Music',
+  'Sports',
+  'Education',
+  'Gaming',
+  'News',
+  'Travel',
+  'Food',
+  'Lifestyle',
+  'Fashion',
+  'Health',
   
 ];
 
