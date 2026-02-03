@@ -216,6 +216,297 @@
 // }
 
 // src/common/Navbar.jsx
+
+
+
+
+
+
+// import React, { useState, useRef, useEffect } from 'react';
+// import { Link, useNavigate } from 'react-router-dom';
+// import {
+//   Menu,
+//   Search,
+//   Mic,
+//   Plus,
+//   Bell,
+//   Star,
+//   User,
+//   Settings,
+//   LogOut,
+//   Wallet,
+//   History,
+//   Heart,
+//   Clock,
+//   Video,
+//   ChevronRight,
+//   ChevronDown,
+// } from 'lucide-react';
+// import { useRewards } from '../../context/RewardContext';
+
+// export default function Navbar({ toggleSidebar }) {
+//   const { points } = useRewards();
+//   const navigate = useNavigate();
+
+//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+//   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+//   const dropdownRef = useRef(null);
+
+//   // Auth state (read from localStorage token)
+//   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('token')));
+//   const [user, setUser] = useState(() => {
+//     try {
+//       return JSON.parse(localStorage.getItem('user')) || null;
+//     } catch {
+//       return null;
+//     }
+//   });
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setIsDropdownOpen(false);
+//         setIsSettingsOpen(false);
+//       }
+//     };
+//     document.addEventListener('mousedown', handleClickOutside);
+//     return () =>
+//       document.removeEventListener('mousedown', handleClickOutside);
+//   }, []);
+
+//   const toggleDropdown = () => {
+//     setIsDropdownOpen((prev) => !prev);
+//     setIsSettingsOpen(false);
+//   };
+
+//   const toggleSettings = () => {
+//     setIsSettingsOpen((prev) => !prev);
+//   };
+
+//   // Sync user state from localStorage and listen to auth changes
+//   useEffect(() => {
+//     const loadUser = () => {
+//       try {
+//         const u = JSON.parse(localStorage.getItem('user'));
+//         setUser(u);
+//         setIsLoggedIn(Boolean(localStorage.getItem('token')));
+//       } catch {
+//         setUser(null);
+//         setIsLoggedIn(false);
+//       }
+//     };
+
+//     // initial load
+//     loadUser();
+
+//     // listen to custom auth events and cross-window storage events
+//     window.addEventListener('auth-change', loadUser);
+//     window.addEventListener('storage', loadUser);
+
+//     return () => {
+//       window.removeEventListener('auth-change', loadUser);
+//       window.removeEventListener('storage', loadUser);
+//     };
+//   }, []);
+
+//   // Sign out handler → clear storage and redirect to /login
+//   const handleSignOut = () => {
+//     // Clear auth from localStorage
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('user');
+
+//     setUser(null);
+//     setIsLoggedIn(false);
+
+//     // notify other listeners
+//     window.dispatchEvent(new Event('auth-change'));
+
+//     setIsDropdownOpen(false);
+//     setIsSettingsOpen(false);
+//     navigate('/login');
+//   };
+
+//   // Handle navigation for settings options
+//   const handleSettingsNavigation = (path) => {
+//     navigate(path);
+//     setIsDropdownOpen(false);
+//     setIsSettingsOpen(false);
+//   };
+
+//   return (
+//     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f] border-b border-gray-800 h-14 flex items-center">
+//       <div className="flex items-center justify-between w-full px-4">
+//         {/* Left: Hamburger + Logo + Points */}
+//         <div className="flex items-center gap-4 md:gap-6">
+//           <button
+//             onClick={toggleSidebar}
+//             className="p-2 hover:bg-[#272727] rounded-full transition-colors"
+//           >
+//             <Menu size={24} className="text-white" />
+//           </button>
+
+//           <div className="flex items-center gap-3">
+//             <span className="text-red-600 text-3xl font-bold">Vidoo</span>
+
+//             {/* Points display */}
+//             <div className="hidden sm:flex items-center gap-1.5 bg-[#272727] px-3 py-1 rounded-full border border-yellow-600/30">
+//               <Star size={18} className="text-yellow-400 fill-yellow-400" />
+//               <span className="text-white font-semibold text-sm">
+//                 {points.toFixed(2)}
+//               </span>
+//               <span className="text-gray-400 text-xs">pts</span>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Center: Search bar */}
+//         <div className="flex-1 max-w-2xl mx-8 hidden md:flex">
+//           <div className="relative w-full">
+//             <input
+//               type="text"
+//               placeholder="Search"
+//               className="w-full bg-[#121212] border border-gray-700 rounded-l-full py-2 px-5 focus:outline-none focus:border-blue-500 text-white placeholder-gray-400"
+//             />
+//             <button className="absolute right-0 top-0 bottom-0 bg-[#222] px-6 rounded-r-full border border-gray-700 border-l-0 hover:bg-[#333] transition-colors">
+//               <Search size={20} className="text-gray-300" />
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Right: Icons + Profile */}
+//         <div className="flex items-center gap-4 sm:gap-6">
+//           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
+//             <Mic size={22} className="text-white" />
+//           </button>
+
+//           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors">
+//             <Plus size={22} className="text-white" />
+//           </button>
+
+//           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
+//             <Bell size={22} className="text-white" />
+//           </button>
+
+//           {/* Profile / Dropdown */}
+//           <div className="relative" ref={dropdownRef}>
+//             {isLoggedIn ? (
+//               <button
+//                 onClick={toggleDropdown}
+//                 className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition-all"
+//               >
+//                 <span className="text-white text-sm font-semibold">{user?.name ? user.name.charAt(0).toUpperCase() : 'A'}</span>
+//               </button>
+//             ) : (
+//               <button onClick={() => navigate('/login')} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition">
+//                 Sign in
+//               </button>
+//             )}
+
+//             {/* Dropdown Menu */}
+//             {isLoggedIn && isDropdownOpen && (
+//               <div className="absolute right-0 mt-3 w-72 bg-[#1f1f1f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
+//                 {/* Profile header */}
+//                 <div className="px-4 py-3 border-b border-gray-700">
+//                   <p className="font-medium text-white">{user?.name || 'Aditya'}</p>
+//                   <p className="text-sm text-gray-400">{user?.email || 'aditya@example.com'}</p>
+//                   <div className="flex items-center justify-between mt-1">
+//                     <p className="text-xs text-gray-400">Role: {user?.role || 'creator'}</p>
+//                     <p className="text-xs text-yellow-400">★ {points.toFixed(2)} pts</p>
+//                   </div>
+//                 </div>
+
+//                 {/* Menu items */}
+//                 <div className="py-2">
+//                   <button className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white">
+//                     <User size={18} />
+//                     <span>Your channel</span>
+//                   </button>
+
+//                   {/* Settings with sub-menu */}
+//                   <div className="relative">
+//                     <button
+//                       onClick={toggleSettings}
+//                       className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center justify-between transition text-white"
+//                     >
+//                       <div className="flex items-center gap-3">
+//                         <Settings size={18} />
+//                         <span>Settings</span>
+//                       </div>
+//                       {isSettingsOpen ? (
+//                         <ChevronDown size={16} />
+//                       ) : (
+//                         <ChevronRight size={16} />
+//                       )}
+//                     </button>
+
+//                     {/* Settings sub-menu */}
+//                     {isSettingsOpen && (
+//                       <div className="ml-4 mt-1 mb-1 bg-[#181818] rounded-lg overflow-hidden border border-gray-700">
+//                         <button
+//                           onClick={() => handleSettingsNavigation('/history')}
+//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                         >
+//                           <History size={16} />
+//                           <span>History</span>
+//                         </button>
+//                         <button
+//                           onClick={() => handleSettingsNavigation('/liked-videos')}
+//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                         >
+//                           <Heart size={16} />
+//                           <span>Liked Videos</span>
+//                         </button>
+//                         <button
+//                           onClick={() => handleSettingsNavigation('/watch-later')}
+//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                         >
+//                           <Clock size={16} />
+//                           <span>Watch Later</span>
+//                         </button>
+//                         <button
+//                           onClick={() => handleSettingsNavigation('/your-videos')}
+//                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
+//                         >
+//                           <Video size={16} />
+//                           <span>Your Videos</span>
+//                         </button>
+//                       </div>
+//                     )}
+//                   </div>
+
+//                   <Link
+//                     to="/withdraw"
+//                     onClick={() => {
+//                       setIsDropdownOpen(false);
+//                       setIsSettingsOpen(false);
+//                     }}
+//                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
+//                   >
+//                     <Wallet size={18} />
+//                     <span>Withdraw Rewards</span>
+//                   </Link>
+//                 </div>
+
+//                 {/* Sign out */}
+//                 <div className="border-t border-gray-700">
+//                   <button
+//                     onClick={handleSignOut}
+//                     className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 text-red-400 transition"
+//                   >
+//                     <LogOut size={18} />
+//                     <span>Sign out</span>
+//                   </button>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </header>
+//   );
+// }
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -246,7 +537,7 @@ export default function Navbar({ toggleSidebar }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Auth state (read from localStorage token)
+  // Auth state
   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('token')));
   const [user, setUser] = useState(() => {
     try {
@@ -256,7 +547,7 @@ export default function Navbar({ toggleSidebar }) {
     }
   });
 
-  // Close dropdown when clicking outside
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -265,8 +556,7 @@ export default function Navbar({ toggleSidebar }) {
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () =>
-      document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const toggleDropdown = () => {
@@ -274,11 +564,7 @@ export default function Navbar({ toggleSidebar }) {
     setIsSettingsOpen(false);
   };
 
-  const toggleSettings = () => {
-    setIsSettingsOpen((prev) => !prev);
-  };
-
-  // Sync user state from localStorage and listen to auth changes
+  // Sync auth state across tabs/windows
   useEffect(() => {
     const loadUser = () => {
       try {
@@ -291,10 +577,7 @@ export default function Navbar({ toggleSidebar }) {
       }
     };
 
-    // initial load
     loadUser();
-
-    // listen to custom auth events and cross-window storage events
     window.addEventListener('auth-change', loadUser);
     window.addEventListener('storage', loadUser);
 
@@ -304,34 +587,21 @@ export default function Navbar({ toggleSidebar }) {
     };
   }, []);
 
-  // Sign out handler → clear storage and redirect to /login
   const handleSignOut = () => {
-    // Clear auth from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-
     setUser(null);
     setIsLoggedIn(false);
-
-    // notify other listeners
     window.dispatchEvent(new Event('auth-change'));
-
     setIsDropdownOpen(false);
     setIsSettingsOpen(false);
     navigate('/login');
   };
 
-  // Handle navigation for settings options
-  const handleSettingsNavigation = (path) => {
-    navigate(path);
-    setIsDropdownOpen(false);
-    setIsSettingsOpen(false);
-  };
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f] border-b border-gray-800 h-14 flex items-center">
       <div className="flex items-center justify-between w-full px-4">
-        {/* Left: Hamburger + Logo + Points */}
+        {/* Left side */}
         <div className="flex items-center gap-4 md:gap-6">
           <button
             onClick={toggleSidebar}
@@ -343,7 +613,6 @@ export default function Navbar({ toggleSidebar }) {
           <div className="flex items-center gap-3">
             <span className="text-red-600 text-3xl font-bold">Vidoo</span>
 
-            {/* Points display */}
             <div className="hidden sm:flex items-center gap-1.5 bg-[#272727] px-3 py-1 rounded-full border border-yellow-600/30">
               <Star size={18} className="text-yellow-400 fill-yellow-400" />
               <span className="text-white font-semibold text-sm">
@@ -354,7 +623,7 @@ export default function Navbar({ toggleSidebar }) {
           </div>
         </div>
 
-        {/* Center: Search bar */}
+        {/* Center: Search */}
         <div className="flex-1 max-w-2xl mx-8 hidden md:flex">
           <div className="relative w-full">
             <input
@@ -368,7 +637,7 @@ export default function Navbar({ toggleSidebar }) {
           </div>
         </div>
 
-        {/* Right: Icons + Profile */}
+        {/* Right side */}
         <div className="flex items-center gap-4 sm:gap-6">
           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
             <Mic size={22} className="text-white" />
@@ -382,25 +651,29 @@ export default function Navbar({ toggleSidebar }) {
             <Bell size={22} className="text-white" />
           </button>
 
-          {/* Profile / Dropdown */}
+          {/* Profile dropdown */}
           <div className="relative" ref={dropdownRef}>
             {isLoggedIn ? (
               <button
                 onClick={toggleDropdown}
                 className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition-all"
               >
-                <span className="text-white text-sm font-semibold">{user?.name ? user.name.charAt(0).toUpperCase() : 'A'}</span>
+                <span className="text-white text-sm font-semibold">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
+                </span>
               </button>
             ) : (
-              <button onClick={() => navigate('/login')} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition">
+              <button
+                onClick={() => navigate('/login')}
+                className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition"
+              >
                 Sign in
               </button>
             )}
 
-            {/* Dropdown Menu */}
             {isLoggedIn && isDropdownOpen && (
               <div className="absolute right-0 mt-3 w-72 bg-[#1f1f1f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
-                {/* Profile header */}
+                {/* User info */}
                 <div className="px-4 py-3 border-b border-gray-700">
                   <p className="font-medium text-white">{user?.name || 'Aditya'}</p>
                   <p className="text-sm text-gray-400">{user?.email || 'aditya@example.com'}</p>
@@ -412,54 +685,74 @@ export default function Navbar({ toggleSidebar }) {
 
                 {/* Menu items */}
                 <div className="py-2">
-                  <button className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white">
+                  <button
+                    onClick={() => {
+                      navigate('/profile'); // ← your channel page
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center gap-3 transition text-white"
+                  >
                     <User size={18} />
                     <span>Your channel</span>
                   </button>
 
-                  {/* Settings with sub-menu */}
+                  {/* Settings → sub-menu */}
                   <div className="relative">
                     <button
-                      onClick={toggleSettings}
+                      onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                       className="w-full px-4 py-2.5 text-left hover:bg-[#272727] flex items-center justify-between transition text-white"
                     >
                       <div className="flex items-center gap-3">
                         <Settings size={18} />
                         <span>Settings</span>
                       </div>
-                      {isSettingsOpen ? (
-                        <ChevronDown size={16} />
-                      ) : (
-                        <ChevronRight size={16} />
-                      )}
+                      {isSettingsOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                     </button>
 
-                    {/* Settings sub-menu */}
                     {isSettingsOpen && (
                       <div className="ml-4 mt-1 mb-1 bg-[#181818] rounded-lg overflow-hidden border border-gray-700">
                         <button
-                          onClick={() => handleSettingsNavigation('/history')}
+                          onClick={() => {
+                            navigate('/history');
+                            setIsDropdownOpen(false);
+                            setIsSettingsOpen(false);
+                          }}
                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
                         >
                           <History size={16} />
                           <span>History</span>
                         </button>
+
                         <button
-                          onClick={() => handleSettingsNavigation('/liked-videos')}
+                          onClick={() => {
+                            navigate('/liked-videos');
+                            setIsDropdownOpen(false);
+                            setIsSettingsOpen(false);
+                          }}
                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
                         >
                           <Heart size={16} />
                           <span>Liked Videos</span>
                         </button>
+
                         <button
-                          onClick={() => handleSettingsNavigation('/watch-later')}
+                          onClick={() => {
+                            navigate('/watch-later');
+                            setIsDropdownOpen(false);
+                            setIsSettingsOpen(false);
+                          }}
                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
                         >
                           <Clock size={16} />
                           <span>Watch Later</span>
                         </button>
+
                         <button
-                          onClick={() => handleSettingsNavigation('/your-videos')}
+                          onClick={() => {
+                            navigate('/your-videos');
+                            setIsDropdownOpen(false);
+                            setIsSettingsOpen(false);
+                          }}
                           className="w-full px-4 py-2.5 text-left hover:bg-[#222] flex items-center gap-3 transition text-white text-sm"
                         >
                           <Video size={16} />

@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
@@ -15,6 +14,10 @@ import ReelPlayerPage from "../components/common/ReelPlayerPage";
 import FullVideo from "../pages/UploadVideo/FullVideo";
 
 import AuthPage from "../pages/Login.jsx/AuthPage";
+import WatchHistoryTab from "../pages/Settings/WatchHistoryTab";
+import LikedVideosTab from "../pages/Settings/LikedVideosTab";
+import YourVideosTab from "../pages/Settings/YourVideosTab";
+import WatchLaterTab from "../pages/Settings/WatchLaterTab";
 
 export default function AppRoutes() {
   return (
@@ -34,6 +37,12 @@ export default function AppRoutes() {
           <Route path="reel" element={<ReelPlayerPage />} />
           <Route path="video/:id" element={<FullVideo />} />
           <Route path="profile" element={<Profile />} />
+
+          <Route path="/history" element={<WatchHistoryTab />} />
+          <Route path="/liked-videos" element={<LikedVideosTab />} />
+          <Route path="/watch-later" element={<WatchLaterTab />} />
+          <Route path="/your-videos" element={<YourVideosTab />} />
+          <Route path="/withdraw" element={<WithdrawPage />} />
         </Route>
       </Route>
 

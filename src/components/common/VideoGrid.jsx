@@ -6,7 +6,6 @@ import React from "react";
 import useRef from "react";
 import { ChevronRight, Search, Bell, Play, Info, Plus } from "lucide-react";
 
-// Romantic International TV Shows
 const romanticShows = [
   { id: 1, title: "Love in the Clouds", thumb: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=225&fit=crop" },
   { id: 2, title: "Hidden Love", thumb: "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=400&h=225&fit=crop" },
