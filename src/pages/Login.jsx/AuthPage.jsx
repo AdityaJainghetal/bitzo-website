@@ -3,7 +3,7 @@
 // import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 // import { getDeviceId } from "./deviceId"; // your helper file
 
-// const API_BASE = "http://localhost:8000/api"; // change to your backend URL
+// const API_BASE = "https://bitzo-server.onrender.com/api"; // change to your backend URL
 
 // export default function AuthPage() {
 //   const [isLogin, setIsLogin] = useState(true);
@@ -226,17 +226,15 @@
 //   );
 // }
 
-
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"; // ← added
 import { getDeviceId } from "./deviceId";
 
-const API_BASE = "http://localhost:8000/api";
-const GOOGLE_CLIENT_ID = "1043684646784-d9igjhng2cfdp006ogsi0am1i3d4djh1.apps.googleusercontent.com"; // ← paste here
+const API_BASE = "https://bitzo-server.onrender.com/api";
+const GOOGLE_CLIENT_ID =
+  "1043684646784-d9igjhng2cfdp006ogsi0am1i3d4djh1.apps.googleusercontent.com"; // ← paste here
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -370,7 +368,9 @@ export default function AuthPage() {
             <button
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-4 font-medium ${
-                isLogin ? "text-white border-b-2 border-red-600" : "text-gray-400"
+                isLogin
+                  ? "text-white border-b-2 border-red-600"
+                  : "text-gray-400"
               }`}
             >
               Login
@@ -378,7 +378,9 @@ export default function AuthPage() {
             <button
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-4 font-medium ${
-                !isLogin ? "text-white border-b-2 border-red-600" : "text-gray-400"
+                !isLogin
+                  ? "text-white border-b-2 border-red-600"
+                  : "text-gray-400"
               }`}
             >
               Register
@@ -397,7 +399,7 @@ export default function AuthPage() {
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
-                theme="filled_black"     // or "outline"
+                theme="filled_black" // or "outline"
                 text={isLogin ? "signin_with" : "signup_with"} // "signup_with" available
                 shape="rectangular"
                 logo_alignment="left"
@@ -473,7 +475,11 @@ export default function AuthPage() {
                   loading ? "bg-gray-700" : "bg-red-600 hover:bg-red-700"
                 }`}
               >
-                {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
+                {loading
+                  ? "Processing..."
+                  : isLogin
+                    ? "Sign In"
+                    : "Create Account"}
                 {!loading && <ArrowRight size={18} />}
               </button>
             </form>
@@ -545,8 +551,8 @@ export default function AuthPage() {
 
 //   const generateFakeToken = () => {
 //     // Generate a random token-like string
-//     return Math.random().toString(36).substring(2) + 
-//            Math.random().toString(36).substring(2) + 
+//     return Math.random().toString(36).substring(2) +
+//            Math.random().toString(36).substring(2) +
 //            Math.random().toString(36).substring(2);
 //   };
 
@@ -598,16 +604,16 @@ export default function AuthPage() {
 //       // Save to localStorage
 //       localStorage.setItem("token", fakeToken);
 //       localStorage.setItem("user", JSON.stringify(fakeUser));
-      
+
 //       // Notify other components
 //       window.dispatchEvent(new Event("auth-change"));
-      
+
 //       // Show success message
 //       alert(`${isLogin ? "Login" : "Registration"} successful!\n\nEmail: ${formData.email}\nPassword: ${formData.password}\n\nThis is a demo - no real authentication is performed.`);
-      
+
 //       // Redirect to home/dashboard
 //       navigate(from, { replace: true });
-      
+
 //     } catch (err) {
 //       setError(err.message || "Something went wrong");
 //     } finally {
