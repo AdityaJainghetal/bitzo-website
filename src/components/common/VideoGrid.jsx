@@ -120,10 +120,6 @@ function MovieCard({ item, onClick }) {
   );
 }
 
-// ────────────────────────────────────────────────
-// Main Component
-// ────────────────────────────────────────────────
-
 export default function NetflixStylePage() {
   const navigate = useNavigate();
   const isMobile = useWidth() < 768;

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect, use } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
   Search,
@@ -18,14 +18,14 @@ import {
   ChevronRight,
   ChevronDown,
   HelpCircle,
-  MessageSquare,
-  Crown,
-  DollarSign,
   FileText,
   MessageCircle,
-  PhoneCallIcon,
-} from 'lucide-react';
-import { useRewards } from '../../context/RewardContext';
+  PhoneCall,
+} from "lucide-react";
+import { useRewards } from "../../context/RewardContext";
+import axios from "axios";
+
+const API_BASE_URL = "https://bitzo-server-1.onrender.com";
 
 export default function Navbar({ toggleSidebar }) {
   const { points } = useRewards();
@@ -33,19 +33,59 @@ export default function Navbar({ toggleSidebar }) {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("token")),
+  );
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Auth state
-  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('token')));
-  const [user, setUser] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('user')) || null;
-    } catch {
-      return null;
-    }
-  });
+  // Fetch user profile when logged in
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!isLoggedIn) return;
 
-  // Close dropdown on outside click
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${API_BASE_URL}/api/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUser(response.data.user || response.data);
+      } catch (error) {
+        console.error("Profile fetch failed:", error);
+        if (error.response?.status === 401) {
+          // Token invalid/expired → logout
+          handleSignOut();
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+
+    // Listen for auth changes from other tabs/components
+    const handleAuthChange = () => {
+      const token = localStorage.getItem("token");
+      setIsLoggedIn(Boolean(token));
+      if (token) fetchProfile();
+      else setUser(null);
+    };
+
+    globalThis.addEventListener("auth-change", handleAuthChange);
+    globalThis.addEventListener("storage", handleAuthChange);
+
+    return () => {
+      globalThis.removeEventListener("auth-change", handleAuthChange);
+      globalThis.removeEventListener("storage", handleAuthChange);
+    };
+  }, [isLoggedIn]);
+
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -53,8 +93,8 @@ export default function Navbar({ toggleSidebar }) {
         setIsSettingsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const toggleDropdown = () => {
@@ -62,38 +102,45 @@ export default function Navbar({ toggleSidebar }) {
     setIsSettingsOpen(false);
   };
 
-  // Sync auth state across tabs/windows
-  useEffect(() => {
-    const loadUser = () => {
-      try {
-        const u = JSON.parse(localStorage.getItem('user'));
-        setUser(u);
-        setIsLoggedIn(Boolean(localStorage.getItem('token')));
-      } catch {
-        setUser(null);
-        setIsLoggedIn(false);
+  const handleSignOut = async () => {
+    try {
+      // Optional: Call logout API if your backend has one
+      const token = localStorage.getItem("token");
+      if (token) {
+        await axios
+          .post(
+            `${API_BASE_URL}/api/logout`,
+            {},
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          )
+          .catch((err) => {
+            console.log("Logout API failed (continuing anyway):", err);
+          });
       }
-    };
+    } catch (err) {
+      console.error("Sign out error:", err);
+    } finally {
+      // Clear local storage
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
-    loadUser();
-    window.addEventListener('auth-change', loadUser);
-    window.addEventListener('storage', loadUser);
+      setUser(null);
+      setIsLoggedIn(false);
+      setIsDropdownOpen(false);
+      setIsSettingsOpen(false);
 
-    return () => {
-      window.removeEventListener('auth-change', loadUser);
-      window.removeEventListener('storage', loadUser);
-    };
-  }, []);
+      // Notify other tabs/components
+      window.dispatchEvent(new Event("auth-change"));
 
-  const handleSignOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    setIsLoggedIn(false);
-    window.dispatchEvent(new Event('auth-change'));
-    setIsDropdownOpen(false);
-    setIsSettingsOpen(false);
-    navigate('/login');
+      navigate("/login");
+    }
+  };
+
+  // Fallback avatar letter
+  const getInitial = () => {
+    return user?.name ? user.name.charAt(0).toUpperCase() : "U";
   };
 
   return (
@@ -107,10 +154,8 @@ export default function Navbar({ toggleSidebar }) {
           >
             <Menu size={24} className="text-white" />
           </button>
-
           <div className="flex items-center gap-3">
             <span className="text-red-600 text-3xl font-bold">Vidoo</span>
-
             <div className="hidden sm:flex items-center gap-1.5 bg-[#272727] px-3 py-1 rounded-full border border-yellow-600/30">
               <Star size={18} className="text-yellow-400 fill-yellow-400" />
               <span className="text-white font-semibold text-sm">
@@ -141,31 +186,36 @@ export default function Navbar({ toggleSidebar }) {
             <Mic size={22} className="text-white" />
           </button>
 
-       <Link
-  to="/uploadvideo"
-  className="p-2 hover:bg-[#272727] rounded-full transition-colors flex items-center justify-center"
->
-  <Plus size={22} className="text-white" />
-</Link>
+          <Link
+            to="/uploadvideo"
+            className="p-2 hover:bg-[#272727] rounded-full transition-colors flex items-center justify-center"
+          >
+            <Plus size={22} className="text-white" />
+          </Link>
 
           <button className="p-2 hover:bg-[#272727] rounded-full transition-colors hidden sm:block">
             <Bell size={22} className="text-white" />
           </button>
 
-          {/* Profile dropdown – Enhanced */}
+          {/* Profile / Auth section */}
           <div className="relative" ref={dropdownRef}>
             {isLoggedIn ? (
               <button
                 onClick={toggleDropdown}
                 className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition-all"
+                disabled={loading}
               >
-                <span className="text-white text-sm font-semibold">
-                  {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
-                </span>
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <span className="text-white text-sm font-semibold">
+                    {getInitial()}
+                  </span>
+                )}
               </button>
             ) : (
               <button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
                 className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition"
               >
                 Sign in
@@ -174,18 +224,18 @@ export default function Navbar({ toggleSidebar }) {
 
             {isLoggedIn && isDropdownOpen && (
               <div className="absolute right-0 mt-3 w-80 bg-[#0f0f0f] border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50 text-white">
-                {/* Enhanced User Header */}
+                {/* User Header */}
                 <div className="px-5 py-5 border-b border-gray-800 bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f]">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                      <span className="text-2xl font-bold">
-                        {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
-                      </span>
+                      <span className="text-2xl font-bold">{getInitial()}</span>
                     </div>
                     <div className="flex-1">
-                      <p className="text-lg font-semibold">{user?.name || 'Aditya Jain ghetal'}</p>
+                      <p className="text-lg font-semibold">
+                        {user?.name || "User"}
+                      </p>
                       <p className="text-sm text-gray-400 mt-0.5">
-                        @{user?.username || 'adityajainghetal3503'}
+                        {user?.email || "@username"}
                       </p>
                       <div className="flex items-center gap-1.5 mt-1 text-xs text-yellow-400">
                         <Star size={14} className="fill-yellow-400" />
@@ -193,7 +243,7 @@ export default function Navbar({ toggleSidebar }) {
                       </div>
                       <button
                         onClick={() => {
-                          navigate(`/channel/${user?.username || 'adityajainghetal3503'}`);
+                          navigate(`/channel/${user?.email || "me"}`);
                           setIsDropdownOpen(false);
                         }}
                         className="mt-3 w-full py-2 bg-[#272727] hover:bg-[#3a3a3a] rounded text-sm font-medium transition-colors"
@@ -204,11 +254,11 @@ export default function Navbar({ toggleSidebar }) {
                   </div>
                 </div>
 
-                {/* Main Navigation Items */}
+                {/* Navigation Items */}
                 <div className="py-1">
                   <button
                     onClick={() => {
-                      navigate('/profile');
+                      navigate("/profile");
                       setIsDropdownOpen(false);
                     }}
                     className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
@@ -219,7 +269,7 @@ export default function Navbar({ toggleSidebar }) {
 
                   <button
                     onClick={() => {
-                      navigate('/studio'); // or '/creator-dashboard'
+                      navigate("/studio");
                       setIsDropdownOpen(false);
                     }}
                     className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
@@ -228,7 +278,7 @@ export default function Navbar({ toggleSidebar }) {
                     <span>Vidoo Studio</span>
                   </button>
 
-                  {/* Settings Sub-menu – Original */}
+                  {/* Settings Submenu */}
                   <div className="relative">
                     <button
                       onClick={() => setIsSettingsOpen(!isSettingsOpen)}
@@ -238,14 +288,18 @@ export default function Navbar({ toggleSidebar }) {
                         <Settings size={20} className="text-gray-300" />
                         <span>Settings</span>
                       </div>
-                      {isSettingsOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                      {isSettingsOpen ? (
+                        <ChevronDown size={18} />
+                      ) : (
+                        <ChevronRight size={18} />
+                      )}
                     </button>
 
                     {isSettingsOpen && (
                       <div className="bg-[#1a1a1a] border-t border-b border-gray-800 py-1">
                         <button
                           onClick={() => {
-                            navigate('/history');
+                            navigate("/history");
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
@@ -256,7 +310,7 @@ export default function Navbar({ toggleSidebar }) {
                         </button>
                         <button
                           onClick={() => {
-                            navigate('/liked-videos');
+                            navigate("/liked-videos");
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
@@ -267,7 +321,7 @@ export default function Navbar({ toggleSidebar }) {
                         </button>
                         <button
                           onClick={() => {
-                            navigate('/watch-later');
+                            navigate("/watch-later");
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
@@ -278,7 +332,7 @@ export default function Navbar({ toggleSidebar }) {
                         </button>
                         <button
                           onClick={() => {
-                            navigate('/your-videos');
+                            navigate("/your-videos");
                             setIsDropdownOpen(false);
                             setIsSettingsOpen(false);
                           }}
@@ -304,44 +358,33 @@ export default function Navbar({ toggleSidebar }) {
                   </Link>
                 </div>
 
-                {/* Premium / Purchases Section */}
-                   <button
-                   
-                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
-                  >
+                {/* Support & Info */}
+                <div className="py-1 border-t border-gray-800">
+                  <button className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition">
                     <HelpCircle size={20} className="text-gray-300" />
                     <span>FAQ</span>
                   </button>
-
-
-                       <button
-                   
-                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
-                  >
+                  <button className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition">
                     <MessageCircle size={20} className="text-gray-300" />
                     <span>Feedback</span>
                   </button>
-
-
-                    <button
-                   
-                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
-                  >
-                    <PhoneCallIcon size={20} className="text-gray-300" />
+                  <button className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition">
+                    <PhoneCall size={20} className="text-gray-300" />
                     <span>Customer Support</span>
                   </button>
-
-                  
-
-                  
-
-                        <button
-                    
-                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition"
-                  >
+                  <button className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition">
                     <FileText size={20} className="text-gray-300" />
                     <span>Terms and Conditions</span>
                   </button>
+
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition border-t border-gray-800 text-red-400 hover:text-red-300"
+                  >
+                    <LogOut size={20} />
+                    <span>Sign out</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
