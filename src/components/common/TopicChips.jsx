@@ -84,13 +84,11 @@ import axios from "axios";
 
 const API_URL = "https://bitzo-server-1.onrender.com/api/category";
 
-const forYouOptions = ["History", "Liked", "Watch later", "Your videos"];
 
 export default function TopicChips() {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("For you");
-  const [isForYouSubmenuOpen, setIsForYouSubmenuOpen] = useState(true); // ✅ default open
-
+ 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -144,23 +142,7 @@ export default function TopicChips() {
         ))}
       </div>
 
-      {/* For You submenu */}
-      {isForYouSubmenuOpen && selectedTopic === "For you" && (
-        <div className="flex items-center gap-3 px-6 py-2.5 bg-[#0f0f0f] border-t border-gray-800 overflow-x-auto scrollbar-hide">
-          {forYouOptions.map((option) => (
-            <button
-              key={option}
-              className="
-                px-5 py-1 font-medium text-sm rounded-full
-                bg-[#272727] text-white hover:bg-[#3f3f3f]
-                whitespace-nowrap flex-shrink-0 transition-colors
-              "
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-      )}
+ 
     </div>
   );
 }
