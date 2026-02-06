@@ -25,7 +25,7 @@ import {
 import { useRewards } from "../../context/RewardContext";
 import axios from "axios";
 
-const API_BASE_URL = "https://bitzo-server-1.onrender.com";
+const API_BASE_URL = "http://localhost:8000";
 
 export default function Navbar({ toggleSidebar }) {
   const { points } = useRewards();

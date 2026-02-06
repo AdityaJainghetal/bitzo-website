@@ -130,7 +130,7 @@ function ScrollableRow({ items, onItemClick, title }) {
       {/* Left scroll button */}
       <button
         onClick={scrollLeft}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-[calc(100%-2rem)] bg-gradient-to-r from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-[calc(100%-2rem)] bg-linear-to-r from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
       >
         <div className="w-8 h-8 rounded-full bg-black/60 flex items-center justify-center ml-1">
           <ChevronRight size={20} className="text-white rotate-180" />

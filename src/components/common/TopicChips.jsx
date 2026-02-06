@@ -82,13 +82,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_URL = "https://bitzo-server-1.onrender.com/api/category";
-
+const API_URL = "http://localhost:8000/api/category";
 
 export default function TopicChips() {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("For you");
- 
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -141,8 +140,6 @@ export default function TopicChips() {
           </button>
         ))}
       </div>
-
- 
     </div>
   );
 }

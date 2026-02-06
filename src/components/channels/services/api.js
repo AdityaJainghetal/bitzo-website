@@ -1,14 +1,14 @@
-const API_BASE = "https://bitzo-server-1.onrender.com/api"; // ← change to your backend URL
+const API_BASE = "http://localhost:8000/api"; // ← change to your backend URL
 
 async function apiFetch(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
-  
+
   const response = await fetch(url, {
     ...options,
     headers: {
       "Content-Type": "application/json",
       // Add Authorization if you use JWT / cookies
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       ...options.headers,
     },
     credentials: "include", // if using cookies/sessions
@@ -22,24 +22,22 @@ async function apiFetch(endpoint, options = {}) {
   return response.json();
 }
 
-export const getChannel = (handle) => 
-  apiFetch(`/channels/${handle}`);
+export const getChannel = (handle) => apiFetch(`/channels/${handle}`);
 
-export const getMyChannels = () => 
-  apiFetch(`/users/me/channels`); // ← returns list of channels owned by current user
+export const getMyChannels = () => apiFetch(`/users/me/channels`); // ← returns list of channels owned by current user
 
-export const createChannel = (data) => 
+export const createChannel = (data) =>
   apiFetch("/channels", {
     method: "POST",
     body: JSON.stringify(data),
   });
 
-export const uploadVideo = (channelHandle, formData) => 
+export const uploadVideo = (channelHandle, formData) =>
   fetch(`${API_BASE}/channels/${channelHandle}/videos`, {
     method: "POST",
-    body: formData,               // ← no Content-Type header! (browser sets multipart)
+    body: formData, // ← no Content-Type header! (browser sets multipart)
     credentials: "include",
-  }).then(res => {
+  }).then((res) => {
     if (!res.ok) throw new Error("Upload failed");
     return res.json();
   });

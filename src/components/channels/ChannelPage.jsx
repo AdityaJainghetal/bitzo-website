@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -9,110 +11,23 @@ import {
   Plus,
 } from "lucide-react";
 
-// Initial mock channels data
-const initialMockChannels = {
-  adityajainghetal3503: {
-    name: "Aditiya Jain ghetal",
-    handle: "@adityajainghetal3503",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-    banner:
-      "https://images.unsplash.com/photo-1557683316-973673baf926?w=1600&h=400&fit=crop",
-    subscribers: 3,
-    videosCount: 4,
-    description: "More about this channel ...more",
-    isOwnChannel: true,
-    videos: [
-      {
-        id: 1,
-        title: "Task management system demo",
-        thumbnail: "https://picsum.photos/seed/task1/640/360",
-        duration: "3:32",
-        views: 4,
-        uploaded: "1 month ago",
-      },
-      {
-        id: 2,
-        title: "Morning routine in Bhopal",
-        thumbnail: "https://picsum.photos/seed/morning2/640/360",
-        duration: "8:14",
-        views: 47,
-        uploaded: "2 weeks ago",
-      },
-      {
-        id: 3,
-        title: "React project setup 2025",
-        thumbnail: "https://picsum.photos/seed/react3/640/360",
-        duration: "12:05",
-        views: 128,
-        uploaded: "3 days ago",
-      },
-      {
-        id: 4,
-        title: "Street food tour Madhya Pradesh",
-        thumbnail: "https://picsum.photos/seed/food4/640/360",
-        duration: "5:47",
-        views: 312,
-        uploaded: "2 months ago",
-      },
-    ],
-  },
-  techwithaditya: {
-    name: "Tech With Aditya",
-    handle: "@techwithaditya",
-    avatar:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
-    banner:
-      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600&h=400&fit=crop",
-    subscribers: 1240,
-    videosCount: 38,
-    description: "Latest tech reviews & tutorials",
-    isOwnChannel: false,
-    videos: [
-      {
-        id: 1,
-        title: "Best laptop under 60k in 2026",
-        thumbnail: "https://picsum.photos/seed/laptop1/640/360",
-        duration: "11:22",
-        views: 8450,
-        uploaded: "5 days ago",
-      },
-      {
-        id: 2,
-        title: "iPhone 17 Pro Max unboxing",
-        thumbnail: "https://picsum.photos/seed/iphone2/640/360",
-        duration: "9:58",
-        views: 12400,
-        uploaded: "1 week ago",
-      },
-    ],
-  },
-};
+// API base URLs
+const API_BASE = "http://localhost:8000/api";
+const API_CATEGORY = "http://localhost:8000/api/category";
 
-//crete api profoile fetch
-const profileFetch = async () => {
-  try {
-    const response = await fetch(
-      "https://bitzo-server-1.onrender.com/api/profile",
-    );
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching profile:", error);
-    return null;
-  }
-};
+// Helper to get userId from localStorage
+const getUserId = () => localStorage.getItem("userId") || null;
 
 export default function ChannelPage() {
   const { handle: urlHandle } = useParams();
   const navigate = useNavigate();
 
-  const [mockChannels, setMockChannels] = useState(initialMockChannels);
-  const [selectedHandle, setSelectedHandle] = useState(urlHandle);
+  const [channels, setChannels] = useState({});
+  const [selectedHandle, setSelectedHandle] = useState(urlHandle || "");
   const [channel, setChannel] = useState(null);
   const [activeTab, setActiveTab] = useState("Videos");
-
-  // Create channel modal
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newChannel, setNewChannel] = useState({
     name: "",
@@ -127,23 +42,153 @@ export default function ChannelPage() {
   });
   const [createError, setCreateError] = useState("");
 
-  // Upload video modal
+  // Upload video modal states
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedUploadChannel, setSelectedUploadChannel] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [videoPreview, setVideoPreview] = useState("");
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
-  const [videoTitle, setVideoTitle] = useState("");
+  const [videoname, setVideoname] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [enableComments, setEnableComments] = useState(true);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [uploadError, setUploadError] = useState("");
 
+  // Fetch categories once on mount
   useEffect(() => {
-    const found = mockChannels[selectedHandle.replace("@", "")];
-    setChannel(found || mockChannels["adityajainghetal3503"]);
-  }, [selectedHandle, mockChannels]);
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(API_CATEGORY);
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        const data = await res.json();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Fetch user's channels
+  useEffect(() => {
+    const fetchUserChannels = async () => {
+      const userId = getUserId();
+      const token = localStorage.getItem("token");
+
+      if (!userId || !token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const res = await fetch(`${API_BASE}/uservideo/channel`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch channels");
+
+        const data = await res.json();
+        const channelsList = data.channels || [];
+
+        const channelsMap = {};
+        channelsList.forEach((ch) => {
+          const handleClean = ch.name?.replace(/\s+/g, "") || ch._id;
+          channelsMap[handleClean] = {
+            ...ch,
+            handle: `@${handleClean}`,
+            isOwnChannel: true,
+            avatar:
+              ch.channelImage ||
+              "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
+            banner:
+              ch.channelBanner ||
+              "https://images.unsplash.com/photo-1557683316-973673baf926?w=1600&h=400&fit=crop",
+            name: ch.name || "Unnamed Channel",
+            subscribers: 0,
+            videosCount: 0,
+            videos: [],
+            description: ch.channeldescription || "More about this channel...",
+            categoryId: ch.category,
+          };
+        });
+
+        setChannels(channelsMap);
+
+        let initialHandle = urlHandle;
+        if (!initialHandle && Object.keys(channelsMap).length > 0) {
+          initialHandle = Object.keys(channelsMap)[0];
+        }
+
+        if (initialHandle) {
+          setSelectedHandle(initialHandle);
+        }
+      } catch (err) {
+        console.error("Error fetching channels:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserChannels();
+  }, [urlHandle]);
+
+  // Fetch selected channel details
+  useEffect(() => {
+    if (!selectedHandle) return;
+
+    const fetchSingleChannel = async () => {
+      const cleanHandle = selectedHandle.replace("@", "");
+
+      if (channels[cleanHandle]) {
+        setChannel(channels[cleanHandle]);
+        navigate(`/channel/${cleanHandle}`, { replace: true });
+        return;
+      }
+
+      // If not in local state, fetch again (fallback)
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`${API_BASE}/uservideo/channel`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Channel not found");
+
+        const data = await res.json();
+        const formatted = {
+          ...data,
+          handle: `@${cleanHandle}`,
+          isOwnChannel: true,
+          avatar:
+            data.channelImage ||
+            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
+          banner:
+            data.channelBanner ||
+            "https://images.unsplash.com/photo-1557683316-973673baf926?w=1600&h=400&fit=crop",
+          name: data.name || "Channel Name",
+          subscribers: data.subscribers || 0,
+          videosCount: data.videos?.length || 0,
+          videos: data.videos || [],
+          description: data.channeldescription || "More about this channel...",
+          categoryId: data.category,
+        };
+
+        setChannel(formatted);
+        setChannels((prev) => ({ ...prev, [cleanHandle]: formatted }));
+      } catch (err) {
+        console.error("Error fetching single channel:", err);
+        const firstKey = Object.keys(channels)[0];
+        if (firstKey) {
+          setSelectedHandle(firstKey);
+        }
+      }
+    };
+
+    fetchSingleChannel();
+  }, [selectedHandle, channels, navigate]);
 
   const handleChannelChange = (newHandle) => {
     setSelectedHandle(newHandle);
@@ -162,79 +207,125 @@ export default function ChannelPage() {
     }
   };
 
-  const handleCreateChannel = (e) => {
+  const handleCreateChannel = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
-    const cleanHandle = newChannel.name
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "")
-      .replace(/[^a-z0-9]/g, "");
+    if (!token) {
+      setCreateError("Please login first.");
+      return;
+    }
 
     if (!newChannel.name.trim()) {
       setCreateError("Channel name is required");
       return;
     }
-    if (!cleanHandle) {
-      setCreateError("Valid handle could not be generated");
-      return;
-    }
-    if (mockChannels[cleanHandle]) {
-      setCreateError("This handle is already taken");
+
+    if (!newChannel.category) {
+      setCreateError("Please select a category");
       return;
     }
 
-    const newChannelData = {
-      name: newChannel.name.trim(),
-      handle: `@${cleanHandle}`,
-      avatar:
-        newChannel.channelImagePreview ||
-        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
-      banner:
-        newChannel.channelBannerPreview ||
-        "https://images.unsplash.com/photo-1557683311-973673baf926?w=1600&h=400&fit=crop",
-      subscribers: 0,
-      videosCount: 0,
-      description:
-        newChannel.channelDescription.trim() || "Welcome to my new channel!",
-      category: newChannel.category.trim() || "General",
-      contactEmail: newChannel.contactemail.trim() || "",
-      allowContact: newChannel.allowContact,
-      isOwnChannel: true,
-      videos: [],
-    };
+    try {
+      const formData = new FormData();
+      formData.append("name", newChannel.name.trim());
+      formData.append("channeldescription", newChannel.channelDescription || "");
+      formData.append("category", newChannel.category);
+      formData.append("contactemail", newChannel.contactemail || "");
 
-    setMockChannels((prev) => ({ ...prev, [cleanHandle]: newChannelData }));
+      if (newChannel.channelImageFile) {
+        formData.append("channelImage", newChannel.channelImageFile);
+      }
+      if (newChannel.channelBannerFile) {
+        formData.append("channelBanner", newChannel.channelBannerFile);
+      }
 
-    setSelectedHandle(`@${cleanHandle}`);
-    navigate(`/channel/${cleanHandle}`);
+      const response = await fetch(`${API_BASE}/uservideo/createchannel`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-    setNewChannel({
-      name: "",
-      channelDescription: "",
-      category: "",
-      channelImageFile: null,
-      channelImagePreview: "",
-      channelBannerFile: null,
-      channelBannerPreview: "",
-      contactemail: "",
-      allowContact: false,
-    });
-    setCreateError("");
-    setShowCreateModal(false);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create channel");
+      }
+
+      const createdChannel = result.channel;
+      const handleClean = createdChannel.name?.replace(/\s+/g, "") || createdChannel._id;
+
+      setChannels((prev) => ({
+        ...prev,
+        [handleClean]: {
+          ...createdChannel,
+          handle: `@${handleClean}`,
+          isOwnChannel: true,
+          avatar: createdChannel.channelImage || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
+          banner: createdChannel.channelBanner || "https://images.unsplash.com/photo-1557683316-973673baf926?w=1600&h=400&fit=crop",
+          name: createdChannel.name,
+          description: createdChannel.channeldescription || "",
+          categoryId: createdChannel.category?._id || createdChannel.category,
+        },
+      }));
+
+      setSelectedHandle(handleClean);
+      setShowCreateModal(false);
+      setNewChannel({
+        name: "",
+        channelDescription: "",
+        category: "",
+        channelImageFile: null,
+        channelImagePreview: "",
+        channelBannerFile: null,
+        channelBannerPreview: "",
+        contactemail: "",
+        allowContact: false,
+      });
+
+      alert("Channel created successfully!");
+    } catch (error) {
+      console.error("Channel creation error:", error);
+      setCreateError(error.message || "Failed to create channel.");
+    }
   };
+
   const handleUploadVideo = (e) => {
     e.preventDefault();
+    // Here you would implement actual video upload logic to backend
+    console.log("Uploading video to channel:", selectedUploadChannel);
+    console.log("name:", videoname);
+    console.log("File:", videoFile?.name);
 
-    const api =
-      "https://bitzo-server-1.onrender.com/api/uservideo/createchannel";
+    // Reset form
     setShowUploadModal(false);
+    setVideoFile(null);
+    setVideoPreview("");
+    setThumbnailFile(null);
+    setThumbnailPreview("");
+    setVideoname("");
+    setVideoDescription("");
+    setEnableComments(true);
+    setAgreeTerms(false);
   };
 
-  if (!channel)
+  if (loading) {
+    return <div className="text-center py-20 text-gray-400">Loading channels...</div>;
+  }
+
+  if (!channel && Object.keys(channels).length === 0) {
     return (
-      <div className="text-center py-20 text-gray-400">Loading channel...</div>
+      <div className="text-center py-20 text-gray-400">
+        No channels found. Create one to get started.
+      </div>
     );
+  }
+
+  if (!channel) {
+    return <div className="text-center py-20 text-gray-400">Channel not found</div>;
+  }
 
   const tabs = ["Videos", "Playlists", "Posts"];
 
@@ -249,24 +340,17 @@ export default function ChannelPage() {
             className="w-full h-full object-cover"
           />
         </div>
+
         <div className="px-6 md:px-12 lg:px-24 -mt-20 md:-mt-28 relative z-10 flex flex-col md:flex-row items-start md:items-end gap-6">
           <div className="w-32 h-32 md:w-44 md:h-44 rounded-full border-4 border-[#0f0f0f] overflow-hidden bg-gray-800 shadow-2xl">
             <img
               src={channel.avatar}
-              alt="Avatar"
+              alt="Channel avatar"
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex-1 pb-4">
-            <h1 className="text-3xl md:text-5xl font-bold">{channel.name}</h1>
-            <p className="text-gray-400 mt-2 text-lg">
-              {channel.handle} • {channel.subscribers.toLocaleString()}{" "}
-              subscribers • {channel.videosCount} videos
-            </p>
-            <p className="text-gray-400 mt-2 max-w-2xl">
-              {channel.description}
-            </p>
 
+          <div className="flex-1 pb-4">
             <div className="flex flex-wrap gap-4 mt-5">
               {channel.isOwnChannel ? (
                 <>
@@ -275,7 +359,7 @@ export default function ChannelPage() {
                     className="px-6 py-2.5 bg-[#272727] hover:bg-[#3a3a3a] rounded-full flex items-center gap-2 transition"
                   >
                     <Edit size={18} />
-                    Customise channel
+                    Customize channel
                   </button>
                   <button
                     onClick={() => setShowUploadModal(true)}
@@ -303,36 +387,20 @@ export default function ChannelPage() {
                 </>
               )}
             </div>
-
-            {Object.keys(mockChannels).length > 0 && (
-              <div className="mt-6">
-                <label className="text-sm text-gray-400 block mb-1.5">
-                  Switch channel
-                </label>
-                <div className="relative inline-block w-full max-w-xs">
-                  <select
-                    value={selectedHandle}
-                    onChange={(e) => handleChannelChange(e.target.value)}
-                    className="w-full px-4 py-2 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white appearance-none pr-10 focus:outline-none focus:border-blue-500 text-sm"
-                  >
-                    {Object.keys(mockChannels).map((key) => (
-                      <option key={key} value={`@${key}`}>
-                        {mockChannels[key].handle}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                    size={16}
-                  />
-                </div>
-              </div>
-            )}
           </div>
+        </div>
+
+        <div className="px-6 md:px-12 lg:px-24 mt-6">
+          <h1 className="text-3xl md:text-5xl font-bold">{channel.name}</h1>
+          <p className="text-gray-400 mt-2 text-lg">
+            {channel.handle} • {channel.subscribers} subscribers •{" "}
+            {channel.category?.name || "Uncategorized"}
+          </p>
+          <p className="text-gray-400 mt-2 max-w-2xl">{channel.description}</p>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs + Channel Switcher */}
       <div className="px-6 md:px-12 lg:px-24 mt-10 border-b border-gray-700">
         <div className="flex gap-10 overflow-x-auto pb-1">
           {tabs.map((tab) => (
@@ -352,51 +420,70 @@ export default function ChannelPage() {
             <Search size={22} />
           </button>
         </div>
+
+        {Object.keys(channels).length > 0 && (
+          <div className="mt-6">
+            <label className="text-sm text-gray-400 block mb-1.5">Switch channel</label>
+            <div className="relative inline-block w-full max-w-xs">
+              <select
+                value={selectedHandle}
+                onChange={(e) => handleChannelChange(e.target.value)}
+                className="w-full px-4 py-2 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white appearance-none pr-10 focus:outline-none focus:border-blue-500 text-sm"
+              >
+                {Object.keys(channels).map((key) => (
+                  <option key={key} value={channels[key].handle}>
+                    {channels[key].name} ({channels[key].handle})
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                size={16}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Content */}
+      {/* Tab Content */}
       <div className="px-6 md:px-12 lg:px-24 py-10">
         {activeTab === "Videos" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 md:gap-6">
-            {channel.videos.length > 0 ? (
+            {channel.videos?.length > 0 ? (
               channel.videos.map((video) => (
-                <div key={video.id} className="cursor-pointer group">
+                <div key={video._id || video.id} className="cursor-pointer group">
                   <div className="relative rounded-xl overflow-hidden bg-black aspect-video shadow-lg">
                     <img
                       src={video.thumbnail}
-                      alt={video.title}
+                      alt={video.name}
                       className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
                     />
                     <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 text-xs rounded font-medium">
-                      {video.duration}
+                      {video.duration || "??:??"}
                     </div>
                   </div>
                   <div className="mt-3">
                     <h3 className="font-medium line-clamp-2 group-hover:text-blue-400 transition-colors">
-                      {video.title}
+                      {video.name}
                     </h3>
                     <p className="text-sm text-gray-400 mt-1.5">
-                      {video.views.toLocaleString()} views • {video.uploaded}
+                      {video.views?.toLocaleString() || 0} views • {video.uploaded || "recent"}
                     </p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-400 py-10 col-span-full">
-                No videos yet
-              </p>
+              <p className="text-center text-gray-400 py-10 col-span-full">No videos yet</p>
             )}
           </div>
         )}
+
         {activeTab === "Playlists" && (
-          <p className="text-center text-gray-400 py-20 text-lg">
-            No playlists created yet
-          </p>
+          <p className="text-center text-gray-400 py-20 text-lg">No playlists created yet</p>
         )}
+
         {activeTab === "Posts" && (
-          <p className="text-center text-gray-400 py-20 text-lg">
-            No community posts yet
-          </p>
+          <p className="text-center text-gray-400 py-20 text-lg">No community posts yet</p>
         )}
       </div>
 
@@ -414,15 +501,11 @@ export default function ChannelPage() {
 
             <form onSubmit={handleCreateChannel} className="space-y-3.5">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Channel name *
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Channel name *</label>
                 <input
                   type="text"
                   value={newChannel.name}
-                  onChange={(e) =>
-                    setNewChannel({ ...newChannel, name: e.target.value })
-                  }
+                  onChange={(e) => setNewChannel({ ...newChannel, name: e.target.value })}
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm"
                   placeholder="My Awesome Channel"
                   required
@@ -430,31 +513,24 @@ export default function ChannelPage() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Category
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Category *</label>
                 <select
                   value={newChannel.category}
-                  onChange={(e) =>
-                    setNewChannel({ ...newChannel, category: e.target.value })
-                  }
+                  onChange={(e) => setNewChannel({ ...newChannel, category: e.target.value })}
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm"
+                  required
                 >
                   <option value="">Select category</option>
-                  <option value="Gaming">Gaming</option>
-                  <option value="Tech">Tech</option>
-                  <option value="Education">Education</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Vlogs">Vlogs</option>
-                  <option value="Music">Music</option>
-                  <option value="Other">Other</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Channel Image (avatar)
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Channel Image (avatar)</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -462,20 +538,16 @@ export default function ChannelPage() {
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:text-sm file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
                 />
                 {newChannel.channelImagePreview && (
-                  <div className="mt-2">
-                    <img
-                      src={newChannel.channelImagePreview}
-                      alt="Avatar preview"
-                      className="w-20 h-20 rounded-full object-cover border border-gray-600"
-                    />
-                  </div>
+                  <img
+                    src={newChannel.channelImagePreview}
+                    alt="Avatar preview"
+                    className="mt-2 w-20 h-20 rounded-full object-cover border border-gray-600"
+                  />
                 )}
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Channel Banner
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Channel Banner</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -483,27 +555,20 @@ export default function ChannelPage() {
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:text-sm file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
                 />
                 {newChannel.channelBannerPreview && (
-                  <div className="mt-2">
-                    <img
-                      src={newChannel.channelBannerPreview}
-                      alt="Banner preview"
-                      className="w-full h-24 object-cover rounded-lg border border-gray-600"
-                    />
-                  </div>
+                  <img
+                    src={newChannel.channelBannerPreview}
+                    alt="Banner preview"
+                    className="mt-2 w-full h-24 object-cover rounded-lg border border-gray-600"
+                  />
                 )}
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Description (optional)
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Description (optional)</label>
                 <textarea
                   value={newChannel.channelDescription}
                   onChange={(e) =>
-                    setNewChannel({
-                      ...newChannel,
-                      channelDescription: e.target.value,
-                    })
+                    setNewChannel({ ...newChannel, channelDescription: e.target.value })
                   }
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 h-20 text-sm resize-none"
                   placeholder="Tell people about your channel..."
@@ -511,17 +576,12 @@ export default function ChannelPage() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Contact email (optional)
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Contact email (optional)</label>
                 <input
                   type="email"
                   value={newChannel.contactemail}
                   onChange={(e) =>
-                    setNewChannel({
-                      ...newChannel,
-                      contactemail: e.target.value,
-                    })
+                    setNewChannel({ ...newChannel, contactemail: e.target.value })
                   }
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm"
                   placeholder="example@email.com"
@@ -532,19 +592,12 @@ export default function ChannelPage() {
                     id="allowContact"
                     checked={newChannel.allowContact}
                     onChange={(e) =>
-                      setNewChannel({
-                        ...newChannel,
-                        allowContact: e.target.checked,
-                      })
+                      setNewChannel({ ...newChannel, allowContact: e.target.checked })
                     }
                     className="mt-1 w-4 h-4 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
                   />
-                  <label
-                    htmlFor="allowContact"
-                    className="text-xs text-gray-400"
-                  >
-                    By providing your email, others can contact you for
-                    collaborations or business inquiries.
+                  <label htmlFor="allowContact" className="text-xs text-gray-400">
+                    Allow others to contact you for collaborations/business
                   </label>
                 </div>
               </div>
@@ -561,7 +614,7 @@ export default function ChannelPage() {
                   type="submit"
                   className="px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-sm transition"
                 >
-                  Create
+                  Create channel
                 </button>
               </div>
             </form>
@@ -583,9 +636,7 @@ export default function ChannelPage() {
 
             <form onSubmit={handleUploadVideo} className="space-y-3.5">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Upload to channel *
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Upload to channel *</label>
                 <select
                   value={selectedUploadChannel}
                   onChange={(e) => setSelectedUploadChannel(e.target.value)}
@@ -593,28 +644,24 @@ export default function ChannelPage() {
                   required
                 >
                   <option value="">Select channel</option>
-                  {Object.keys(mockChannels).map((key) => {
-                    const ch = mockChannels[key];
-                    return ch.isOwnChannel ? (
-                      <option key={key} value={key}>
-                        {ch.name} ({ch.handle})
-                      </option>
-                    ) : null;
-                  })}
+                  {Object.keys(channels).map((key) => (
+                    <option key={key} value={key}>
+                      {channels[key].name} ({channels[key].handle})
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Video file *
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Video file *</label>
                 <input
                   type="file"
                   accept="video/*"
                   onChange={(e) => {
-                    if (e.target.files[0]) {
-                      setVideoFile(e.target.files[0]);
-                      setVideoPreview(URL.createObjectURL(e.target.files[0]));
+                    const file = e.target.files[0];
+                    if (file) {
+                      setVideoFile(file);
+                      setVideoPreview(URL.createObjectURL(file));
                     }
                   }}
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:text-sm file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
@@ -628,51 +675,42 @@ export default function ChannelPage() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Thumbnail (optional)
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Thumbnail (optional)</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    if (e.target.files[0]) {
-                      setThumbnailFile(e.target.files[0]);
-                      setThumbnailPreview(
-                        URL.createObjectURL(e.target.files[0]),
-                      );
+                    const file = e.target.files[0];
+                    if (file) {
+                      setThumbnailFile(file);
+                      setThumbnailPreview(URL.createObjectURL(file));
                     }
                   }}
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:text-sm file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
                 />
                 {thumbnailPreview && (
-                  <div className="mt-2">
-                    <img
-                      src={thumbnailPreview}
-                      alt="Thumbnail preview"
-                      className="w-full h-28 object-cover rounded-lg border border-gray-600"
-                    />
-                  </div>
+                  <img
+                    src={thumbnailPreview}
+                    alt="Thumbnail preview"
+                    className="mt-2 w-full h-28 object-cover rounded-lg border border-gray-600"
+                  />
                 )}
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Title *
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">name *</label>
                 <input
                   type="text"
-                  value={videoTitle}
-                  onChange={(e) => setVideoTitle(e.target.value)}
+                  value={videoname}
+                  onChange={(e) => setVideoname(e.target.value)}
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm"
-                  placeholder="Enter video title"
+                  placeholder="Enter video name"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
-                  Description
-                </label>
+                <label className="block text-sm text-gray-300 mb-1">Description</label>
                 <textarea
                   value={videoDescription}
                   onChange={(e) => setVideoDescription(e.target.value)}
@@ -690,10 +728,7 @@ export default function ChannelPage() {
                     onChange={(e) => setEnableComments(e.target.checked)}
                     className="w-4 h-4 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
                   />
-                  <label
-                    htmlFor="enableComments"
-                    className="text-sm text-gray-300"
-                  >
+                  <label htmlFor="enableComments" className="text-sm text-gray-300">
                     Enable comments
                   </label>
                 </div>
@@ -708,12 +743,7 @@ export default function ChannelPage() {
                     required
                   />
                   <label htmlFor="agreeTerms" className="text-xs text-gray-400">
-                    I agree to the{" "}
-                    <span className="text-blue-400 cursor-pointer">
-                      Terms of Service
-                    </span>{" "}
-                    and confirm that I own or have rights to upload this
-                    content.
+                    I agree to the Terms of Service and confirm I own/have rights to this content.
                   </label>
                 </div>
               </div>
