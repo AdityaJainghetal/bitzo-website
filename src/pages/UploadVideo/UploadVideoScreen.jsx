@@ -16,6 +16,7 @@ export default function UploadVideo() {
   const [videoType, setVideoType] = useState("short"); // short or long
 
   const [videoFile, setVideoFile] = useState(null);
+  const [thumbnailFile, setThumbnailFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const isValid = title.trim() && category && videoFile;
@@ -84,6 +85,30 @@ export default function UploadVideo() {
     }
   };
 
+  const generateVideoThumbnail = (file) => {
+    return new Promise((resolve) => {
+      const video = document.createElement("video");
+      video.src = URL.createObjectURL(file);
+      video.onloadedmetadata = () => {
+        video.currentTime = Math.min(1, video.duration / 4); // Get thumbnail at 1 second or 1/4 through video
+      };
+      video.onseeked = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob);
+          },
+          "image/jpeg",
+          0.9,
+        );
+      };
+    });
+  };
+
   const handleUpload = async () => {
     try {
       setLoading(true);
@@ -96,6 +121,16 @@ export default function UploadVideo() {
       if (subCategory) formData.append("subCategory", subCategory);
       formData.append("videoType", videoType); // short / long
       formData.append("video", videoFile);
+
+      // Generate thumbnail from video if not provided
+      if (thumbnailFile) {
+        formData.append("thumbnail", thumbnailFile);
+      } else {
+        const generatedThumbnail = await generateVideoThumbnail(videoFile);
+        if (generatedThumbnail) {
+          formData.append("thumbnail", generatedThumbnail, "thumbnail.jpg");
+        }
+      }
 
       await axios.post(`${API}/adminvideo/upload`, formData, {
         headers: {
@@ -112,6 +147,7 @@ export default function UploadVideo() {
       setSubCategory("");
       setVideoType("short");
       setVideoFile(null);
+      setThumbnailFile(null);
     } catch (error) {
       alert(error.response?.data?.message || "Upload failed ❌");
     } finally {
@@ -222,6 +258,19 @@ export default function UploadVideo() {
               type="file"
               accept="video/*"
               onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+              className="block w-full text-sm text-zinc-400 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-zinc-700 file:text-white hover:file:bg-zinc-600 transition file:cursor-pointer cursor-pointer"
+            />
+          </div>
+
+          {/* Thumbnail Upload */}
+          <div className="space-y-2">
+            <label className="block text-sm text-zinc-400 font-medium">
+              Thumbnail (optional)
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
               className="block w-full text-sm text-zinc-400 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-zinc-700 file:text-white hover:file:bg-zinc-600 transition file:cursor-pointer cursor-pointer"
             />
           </div>
