@@ -26,7 +26,6 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/login" element={<AuthPage />} />
 
-      
       <Route element={<ProtectedLayout />}>
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
@@ -44,8 +43,8 @@ export default function AppRoutes() {
           <Route path="/watch-later" element={<WatchLaterTab />} />
           <Route path="/your-videos" element={<YourVideosTab />} />
           <Route path="/withdraw" element={<WithdrawPage />} />
-          <Route path="/channel/:handle" element={<ChannelPage />} />
-          <Route path="/channel/customize" element={<ChannelCustomization />}/>
+          <Route path="/channel/:id" element={<ChannelPage />} />
+          <Route path="/channel/customize" element={<ChannelCustomization />} />
         </Route>
       </Route>
 

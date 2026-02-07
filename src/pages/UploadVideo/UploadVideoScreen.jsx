@@ -113,11 +113,13 @@ export default function UploadVideo() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
 
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
       formData.append("category", category);
+      formData.append("creator", userId);
       if (subCategory) formData.append("subCategory", subCategory);
       formData.append("videoType", videoType); // short / long
       formData.append("video", videoFile);
