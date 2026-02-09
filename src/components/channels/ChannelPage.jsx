@@ -4948,9 +4948,9 @@ import {
 } from "lucide-react";
 
 // API base URLs
-const API_BASE = "https://bitzo-server-2.onrender.com/api";
-const API_CATEGORY = "https://bitzo-server-2.onrender.com/api/category";
-const BACKEND_URL = "https://bitzo-server-2.onrender.com";
+const API_BASE = "http://localhost:8000/api";
+const API_CATEGORY = "http://localhost:8000/api/category";
+const BACKEND_URL = "http://localhost:8000";
 
 // Helpers
 const getToken = () => localStorage.getItem("token") || null;
@@ -5244,107 +5244,215 @@ export default function ChannelPage() {
     }
   };
 
-  const handleUploadVideo = async (e) => {
-    e.preventDefault();
-    const token = getToken();
 
-    if (!token) {
-      setUploadError("Please login first.");
-      return;
+
+  // const handleUploadVideo = async (e) => {
+  //   e.preventDefault();
+  //   const token = getToken();
+
+  //   if (!token) {
+  //     setUploadError("Please login first.");
+  //     return;
+  //   }
+
+  //   if (!selectedUploadChannelId) {
+  //     setUploadError("Please select a channel");
+  //     return;
+  //   }
+
+  //   if (!videoFile) {
+  //     setUploadError("Please select a video file");
+  //     return;
+  //   }
+
+  //   if (!videoname.trim()) {
+  //     setUploadError("Please enter a video name");
+  //     return;
+  //   }
+
+  //   if (!videoCategory) {
+  //     setUploadError("Please select a video category");
+  //     return;
+  //   }
+
+  //   if (!agreeTerms) {
+  //     setUploadError("Please agree to the terms");
+  //     return;
+  //   }
+
+  //   try {
+  //     setUploading(true);
+  //     setUploadError("");
+
+  //     const formData = new FormData();
+  //     formData.append("name", videoname.trim());
+  //     formData.append("description", videoDescription || "");
+  //     formData.append("category", videoCategory);
+  //     // formData.append("videofile", videoFile);
+  //     formData.append("file", videoFile); // ❌ wrong
+
+
+  //     if (thumbnailFile) {
+  //       formData.append("thumbnail", thumbnailFile);
+  //     }
+
+  //     const response = await fetch(
+  //       `${API_BASE}/uservideo/createuploadvideo/${selectedUploadChannelId}`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         body: formData,
+  //       },
+  //     );
+
+  //     const result = await response.json();
+
+  //     if (!response.ok) {
+  //       throw new Error(result.message || "Failed to upload video");
+  //     }
+
+  //     alert("Video uploaded successfully!");
+
+  //     // Refresh videos
+  //     const videosRes = await fetch(
+  //       `${API_BASE}/uservideo/channel/${selectedChannelId}/videos`,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       },
+  //     );
+
+  //     if (videosRes.ok) {
+  //       const data = await videosRes.json();
+  //       setChannel((prev) => ({
+  //         ...prev,
+  //         videos: data.videos || [],
+  //         videosCount: data.videos?.length || 0,
+  //       }));
+  //     }
+
+  //     setShowUploadModal(false);
+  //     setVideoFile(null);
+  //     setVideoPreview("");
+  //     setThumbnailFile(null);
+  //     setThumbnailPreview("");
+  //     setVideoname("");
+  //     setVideoDescription("");
+  //     setVideoCategory("");
+  //     setAgreeTerms(false);
+  //     setSelectedUploadChannelId("");
+  //   } catch (error) {
+  //     console.error("Video upload error:", error);
+  //     setUploadError(error.message || "Failed to upload video.");
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
+
+
+const handleUploadVideo = async (e) => {
+  e.preventDefault();
+  const token = getToken();
+
+  if (!token) {
+    setUploadError("Please login first.");
+    return;
+  }
+
+  if (!selectedUploadChannelId) {
+    setUploadError("Please select a channel");
+    return;
+  }
+
+  if (!videoFile) {
+    setUploadError("Please select a video file");
+    return;
+  }
+
+  if (!videoname.trim()) {
+    setUploadError("Please enter a video name");
+    return;
+  }
+
+  if (!videoCategory) {
+    setUploadError("Please select a video category");
+    return;
+  }
+
+  if (!agreeTerms) {
+    setUploadError("Please agree to the terms");
+    return;
+  }
+
+  try {
+    setUploading(true);
+    setUploadError("");
+
+    const formData = new FormData();
+    formData.append("name", videoname.trim());
+    formData.append("description", videoDescription || "");
+    formData.append("category", videoCategory);
+    formData.append("video", videoFile);          // Correct field name expected by backend
+
+    if (thumbnailFile) {
+      formData.append("thumbnail", thumbnailFile);
     }
 
-    if (!selectedUploadChannelId) {
-      setUploadError("Please select a channel");
-      return;
-    }
-
-    if (!videoFile) {
-      setUploadError("Please select a video file");
-      return;
-    }
-
-    if (!videoname.trim()) {
-      setUploadError("Please enter a video name");
-      return;
-    }
-
-    if (!videoCategory) {
-      setUploadError("Please select a video category");
-      return;
-    }
-
-    if (!agreeTerms) {
-      setUploadError("Please agree to the terms");
-      return;
-    }
-
-    try {
-      setUploading(true);
-      setUploadError("");
-
-      const formData = new FormData();
-      formData.append("name", videoname.trim());
-      formData.append("description", videoDescription || "");
-      formData.append("category", videoCategory);
-      formData.append("videofile", videoFile);
-
-      if (thumbnailFile) {
-        formData.append("thumbnail", thumbnailFile);
-      }
-
-      const response = await fetch(
-        `${API_BASE}/uservideo/createuploadvideo/${selectedUploadChannelId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
+    const response = await fetch(
+      `${API_BASE}/uservideo/upload/${selectedUploadChannelId}`,  // Correct endpoint
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to upload video");
+        body: formData,
       }
+    );
 
-      alert("Video uploaded successfully!");
+    const result = await response.json();
 
-      // Refresh videos
-      const videosRes = await fetch(
-        `${API_BASE}/uservideo/channel/${selectedChannelId}/videos`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-
-      if (videosRes.ok) {
-        const data = await videosRes.json();
-        setChannel((prev) => ({
-          ...prev,
-          videos: data.videos || [],
-          videosCount: data.videos?.length || 0,
-        }));
-      }
-
-      setShowUploadModal(false);
-      setVideoFile(null);
-      setVideoPreview("");
-      setThumbnailFile(null);
-      setThumbnailPreview("");
-      setVideoname("");
-      setVideoDescription("");
-      setVideoCategory("");
-      setAgreeTerms(false);
-      setSelectedUploadChannelId("");
-    } catch (error) {
-      console.error("Video upload error:", error);
-      setUploadError(error.message || "Failed to upload video.");
-    } finally {
-      setUploading(false);
+    if (!response.ok) {
+      throw new Error(result.message || result.error || "Failed to upload video");
     }
-  };
+
+    alert("Video uploaded successfully!");
+
+    // Refresh the video list for the current channel
+    const videosRes = await fetch(
+      `${API_BASE}/uservideo/channel/${selectedChannelId}/videos`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (videosRes.ok) {
+      const data = await videosRes.json();
+      setChannel((prev) => ({
+        ...prev,
+        videos: data.videos || [],
+        videosCount: data.videos?.length || 0,
+      }));
+    }
+
+    // Reset form
+    setShowUploadModal(false);
+    setVideoFile(null);
+    setVideoPreview("");
+    setThumbnailFile(null);
+    setThumbnailPreview("");
+    setVideoname("");
+    setVideoDescription("");
+    setVideoCategory("");
+    setAgreeTerms(false);
+    setSelectedUploadChannelId("");
+  } catch (error) {
+    console.error("Video upload error:", error);
+    setUploadError(error.message || "Failed to upload video. Please try again.");
+  } finally {
+    setUploading(false);
+  }
+};
 
   const handlePlayVideo = (video) => {
     setCurrentVideo(video);
