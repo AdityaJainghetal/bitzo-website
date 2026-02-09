@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeft, ChevronDown } from "lucide-react";
 
-const API = "http://localhost:8000/api";
+const API = "https://bitzo-server-2.onrender.com/api";
 
 export default function UploadVideo() {
   const [title, setTitle] = useState("");

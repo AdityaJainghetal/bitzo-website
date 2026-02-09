@@ -4,7 +4,7 @@ import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"; // ← added
 import { getDeviceId } from "./deviceId";
 
-const API_BASE = "http://localhost:8000/api";
+const API_BASE = "https://bitzo-server-2.onrender.com/api";
 const GOOGLE_CLIENT_ID =
   "1043684646784-d9igjhng2cfdp006ogsi0am1i3d4djh1.apps.googleusercontent.com"; // ← paste here
 

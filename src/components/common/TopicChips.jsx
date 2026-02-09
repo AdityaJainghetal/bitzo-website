@@ -82,7 +82,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/category";
+const API_URL = "https://bitzo-server-2.onrender.com/api/category";
 
 export default function TopicChips() {
   const [topics, setTopics] = useState([]);

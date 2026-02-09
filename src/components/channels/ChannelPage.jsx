@@ -10,8 +10,8 @@
 // // // } from "lucide-react";
 
 // // // // API base URLs
-// // // const API_BASE = "http://localhost:8000/api";
-// // // const API_CATEGORY = "http://localhost:8000/api/category";
+// // // const API_BASE = "https://bitzo-server-2.onrender.com/api";
+// // // const API_CATEGORY = "https://bitzo-server-2.onrender.com/api/category";
 
 // // // // Helper to get userId from localStorage
 // // // const getUserId = () => localStorage.getItem("userId") || null;
@@ -782,8 +782,8 @@
 // // } from "lucide-react";
 
 // // // API base URLs
-// // const API_BASE = "http://localhost:8000/api";
-// // const API_CATEGORY = "http://localhost:8000/api/category";
+// // const API_BASE = "https://bitzo-server-2.onrender.com/api";
+// // const API_CATEGORY = "https://bitzo-server-2.onrender.com/api/category";
 
 // // // Helper to get userId from localStorage
 // // const getUserId = () => localStorage.getItem("userId") || null;
@@ -1658,8 +1658,8 @@
 // } from "lucide-react";
 
 // // API base URLs
-// const API_BASE = "http://localhost:8000/api";
-// const API_CATEGORY = "http://localhost:8000/api/category";
+// const API_BASE = "https://bitzo-server-2.onrender.com/api";
+// const API_CATEGORY = "https://bitzo-server-2.onrender.com/api/category";
 
 // // Helper to get userId from localStorage
 // const getUserId = () => localStorage.getItem("userId") || null;
@@ -2618,8 +2618,6 @@
 //   );
 // }
 
-
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -2633,9 +2631,9 @@ import {
 } from "lucide-react";
 
 // API base URLs
-const API_BASE = "http://localhost:8000/api";
-const API_CATEGORY = "http://localhost:8000/api/category";
-const BACKEND_URL = "http://localhost:8000"; // Base URL for serving static files
+const API_BASE = "https://bitzo-server-2.onrender.com/api";
+const API_CATEGORY = "https://bitzo-server-2.onrender.com/api/category";
+const BACKEND_URL = "https://bitzo-server-2.onrender.com"; // Base URL for serving static files
 
 // Helper to get userId from localStorage
 const getUserId = () => localStorage.getItem("userId") || null;
@@ -2682,7 +2680,7 @@ export default function ChannelPage() {
   // Video player modal states
   const [showVideoPlayer, setShowVideoPlayer] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(null);
-console.log(thumbnailPreview,"thumbnailPreview")
+  console.log(thumbnailPreview, "thumbnailPreview");
   // Helper function to get full video URL
   const getVideoUrl = (videoPath) => {
     if (!videoPath) return "";
@@ -2796,11 +2794,14 @@ console.log(thumbnailPreview,"thumbnailPreview")
         try {
           const token = localStorage.getItem("token");
           const channelId = channels[cleanHandle]._id;
-          
+
           // Fetch videos from the backend
-          const videosRes = await fetch(`${API_BASE}/uservideo/channel/${channelId}/videos`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const videosRes = await fetch(
+            `${API_BASE}/uservideo/channel/${channelId}/videos`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
 
           let videosData = [];
           if (videosRes.ok) {
@@ -2904,7 +2905,10 @@ console.log(thumbnailPreview,"thumbnailPreview")
     try {
       const formData = new FormData();
       formData.append("name", newChannel.name.trim());
-      formData.append("channeldescription", newChannel.channelDescription || "");
+      formData.append(
+        "channeldescription",
+        newChannel.channelDescription || "",
+      );
       formData.append("category", newChannel.category);
       formData.append("contactemail", newChannel.contactemail || "");
 
@@ -2930,7 +2934,8 @@ console.log(thumbnailPreview,"thumbnailPreview")
       }
 
       const createdChannel = result.channel;
-      const handleClean = createdChannel.name?.replace(/\s+/g, "") || createdChannel._id;
+      const handleClean =
+        createdChannel.name?.replace(/\s+/g, "") || createdChannel._id;
 
       setChannels((prev) => ({
         ...prev,
@@ -2938,8 +2943,12 @@ console.log(thumbnailPreview,"thumbnailPreview")
           ...createdChannel,
           handle: `@${handleClean}`,
           isOwnChannel: true,
-          avatar: createdChannel.channelImage || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
-          banner: createdChannel.channelBanner || "https://images.unsplash.com/photo-1557683316-973673baf926?w=1600&h=400&fit=crop",
+          avatar:
+            createdChannel.channelImage ||
+            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
+          banner:
+            createdChannel.channelBanner ||
+            "https://images.unsplash.com/photo-1557683316-973673baf926?w=1600&h=400&fit=crop",
           name: createdChannel.name,
           description: createdChannel.channeldescription || "",
           categoryId: createdChannel.category?._id || createdChannel.category,
@@ -2969,9 +2978,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
 
   const handleUploadVideo = async (e) => {
     e.preventDefault();
-    
+
     const token = localStorage.getItem("token");
-    
+
     if (!token) {
       setUploadError("Please login first.");
       return;
@@ -3016,7 +3025,7 @@ console.log(thumbnailPreview,"thumbnailPreview")
       formData.append("description", videoDescription || "");
       formData.append("category", videoCategory);
       formData.append("videofile", videoFile);
-      
+
       if (thumbnailFile) {
         formData.append("thumbnail", thumbnailFile);
       }
@@ -3030,7 +3039,7 @@ console.log(thumbnailPreview,"thumbnailPreview")
             Authorization: `Bearer ${token}`,
           },
           body: formData,
-        }
+        },
       );
 
       const result = await response.json();
@@ -3057,19 +3066,21 @@ console.log(thumbnailPreview,"thumbnailPreview")
       alert("Video uploaded successfully!");
 
       // Refresh the channel to show new video
-      const updatedChannelRes = await fetch(`${API_BASE}/uservideo/channel/${channelId}/videos`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
+      const updatedChannelRes = await fetch(
+        `${API_BASE}/uservideo/channel/${channelId}/videos`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
       if (updatedChannelRes.ok) {
         const videosData = await updatedChannelRes.json();
-        setChannel(prev => ({
+        setChannel((prev) => ({
           ...prev,
           videos: videosData.videos || [],
           videosCount: videosData.videos?.length || 0,
         }));
       }
-
     } catch (error) {
       console.error("Video upload error:", error);
       setUploadError(error.message || "Failed to upload video.");
@@ -3089,7 +3100,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
   };
 
   if (loading) {
-    return <div className="text-center py-20 text-gray-400">Loading channels...</div>;
+    return (
+      <div className="text-center py-20 text-gray-400">Loading channels...</div>
+    );
   }
 
   if (!channel && Object.keys(channels).length === 0) {
@@ -3101,7 +3114,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
   }
 
   if (!channel) {
-    return <div className="text-center py-20 text-gray-400">Channel not found</div>;
+    return (
+      <div className="text-center py-20 text-gray-400">Channel not found</div>
+    );
   }
 
   const tabs = ["Videos", "Playlists", "Posts"];
@@ -3200,7 +3215,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
 
         {Object.keys(channels).length > 0 && (
           <div className="mt-6 pb-4">
-            <label className="text-sm text-gray-400 block mb-1.5">Switch channel</label>
+            <label className="text-sm text-gray-400 block mb-1.5">
+              Switch channel
+            </label>
             <div className="relative inline-block w-full max-w-xs">
               <select
                 value={selectedHandle}
@@ -3228,8 +3245,8 @@ console.log(thumbnailPreview,"thumbnailPreview")
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 md:gap-6">
             {channel.videos?.length > 0 ? (
               channel.videos.map((video) => (
-                <div 
-                  key={video._id || video.id} 
+                <div
+                  key={video._id || video.id}
                   className="cursor-pointer group"
                   onClick={() => handlePlayVideo(video)}
                 >
@@ -3241,7 +3258,11 @@ console.log(thumbnailPreview,"thumbnailPreview")
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center">
-                        <Play size={28} fill="white" className="text-white ml-1" />
+                        <Play
+                          size={28}
+                          fill="white"
+                          className="text-white ml-1"
+                        />
                       </div>
                     </div>
                     <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 text-xs rounded font-medium">
@@ -3253,23 +3274,30 @@ console.log(thumbnailPreview,"thumbnailPreview")
                       {video.title || video.name}
                     </h3>
                     <p className="text-sm text-gray-400 mt-1.5">
-                      {video.views?.toLocaleString() || 0} views • {video.uploaded || "recent"}
+                      {video.views?.toLocaleString() || 0} views •{" "}
+                      {video.uploaded || "recent"}
                     </p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-400 py-10 col-span-full">No videos yet</p>
+              <p className="text-center text-gray-400 py-10 col-span-full">
+                No videos yet
+              </p>
             )}
           </div>
         )}
 
         {activeTab === "Playlists" && (
-          <p className="text-center text-gray-400 py-20 text-lg">No playlists created yet</p>
+          <p className="text-center text-gray-400 py-20 text-lg">
+            No playlists created yet
+          </p>
         )}
 
         {activeTab === "Posts" && (
-          <p className="text-center text-gray-400 py-20 text-lg">No community posts yet</p>
+          <p className="text-center text-gray-400 py-20 text-lg">
+            No community posts yet
+          </p>
         )}
       </div>
 
@@ -3278,7 +3306,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
         <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4">
           <div className="w-full max-w-6xl">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">{currentVideo.title || currentVideo.name}</h2>
+              <h2 className="text-2xl font-bold">
+                {currentVideo.title || currentVideo.name}
+              </h2>
               <button
                 onClick={handleCloseVideoPlayer}
                 className="text-white hover:text-gray-300 text-3xl font-bold"
@@ -3286,7 +3316,7 @@ console.log(thumbnailPreview,"thumbnailPreview")
                 ×
               </button>
             </div>
-            
+
             <div className="bg-black rounded-lg overflow-hidden">
               <video
                 className="w-full"
@@ -3300,11 +3330,15 @@ console.log(thumbnailPreview,"thumbnailPreview")
 
             <div className="mt-4 bg-[#1a1a1a] rounded-lg p-4">
               <div className="flex items-center gap-4 mb-3">
-                <span className="text-gray-400">{currentVideo.views?.toLocaleString() || 0} views</span>
+                <span className="text-gray-400">
+                  {currentVideo.views?.toLocaleString() || 0} views
+                </span>
                 <span className="text-gray-400">•</span>
-                <span className="text-gray-400">{new Date(currentVideo.createdAt).toLocaleDateString()}</span>
+                <span className="text-gray-400">
+                  {new Date(currentVideo.createdAt).toLocaleDateString()}
+                </span>
               </div>
-              
+
               {currentVideo.description && (
                 <div className="mt-3">
                   <p className="text-gray-300">{currentVideo.description}</p>
@@ -3329,11 +3363,15 @@ console.log(thumbnailPreview,"thumbnailPreview")
 
             <form onSubmit={handleCreateChannel} className="space-y-3.5">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Channel name *</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Channel name *
+                </label>
                 <input
                   type="text"
                   value={newChannel.name}
-                  onChange={(e) => setNewChannel({ ...newChannel, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewChannel({ ...newChannel, name: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm"
                   placeholder="My Awesome Channel"
                   required
@@ -3341,10 +3379,14 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Category *</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Category *
+                </label>
                 <select
                   value={newChannel.category}
-                  onChange={(e) => setNewChannel({ ...newChannel, category: e.target.value })}
+                  onChange={(e) =>
+                    setNewChannel({ ...newChannel, category: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm"
                   required
                 >
@@ -3358,7 +3400,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Channel Image (avatar)</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Channel Image (avatar)
+                </label>
                 <input
                   type="file"
                   accept="image/*"
@@ -3375,7 +3419,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Channel Banner</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Channel Banner
+                </label>
                 <input
                   type="file"
                   accept="image/*"
@@ -3392,11 +3438,16 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Description (optional)</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Description (optional)
+                </label>
                 <textarea
                   value={newChannel.channelDescription}
                   onChange={(e) =>
-                    setNewChannel({ ...newChannel, channelDescription: e.target.value })
+                    setNewChannel({
+                      ...newChannel,
+                      channelDescription: e.target.value,
+                    })
                   }
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 h-20 text-sm resize-none"
                   placeholder="Tell people about your channel..."
@@ -3404,12 +3455,17 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Contact email (optional)</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Contact email (optional)
+                </label>
                 <input
                   type="email"
                   value={newChannel.contactemail}
                   onChange={(e) =>
-                    setNewChannel({ ...newChannel, contactemail: e.target.value })
+                    setNewChannel({
+                      ...newChannel,
+                      contactemail: e.target.value,
+                    })
                   }
                   className="w-full px-3 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 text-sm"
                   placeholder="example@email.com"
@@ -3420,11 +3476,17 @@ console.log(thumbnailPreview,"thumbnailPreview")
                     id="allowContact"
                     checked={newChannel.allowContact}
                     onChange={(e) =>
-                      setNewChannel({ ...newChannel, allowContact: e.target.checked })
+                      setNewChannel({
+                        ...newChannel,
+                        allowContact: e.target.checked,
+                      })
                     }
                     className="mt-1 w-4 h-4 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="allowContact" className="text-xs text-gray-400">
+                  <label
+                    htmlFor="allowContact"
+                    className="text-xs text-gray-400"
+                  >
                     Allow others to contact you for collaborations/business
                   </label>
                 </div>
@@ -3464,7 +3526,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
 
             <form onSubmit={handleUploadVideo} className="space-y-3.5">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Upload to channel *</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Upload to channel *
+                </label>
                 <select
                   value={selectedUploadChannel}
                   onChange={(e) => setSelectedUploadChannel(e.target.value)}
@@ -3481,7 +3545,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Video file *</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Video file *
+                </label>
                 <input
                   type="file"
                   accept="video/*"
@@ -3503,7 +3569,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Thumbnail (optional)</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Thumbnail (optional)
+                </label>
                 <input
                   type="file"
                   accept="image/*"
@@ -3526,7 +3594,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Video Title *</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Video Title *
+                </label>
                 <input
                   type="text"
                   value={videoname}
@@ -3538,7 +3608,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Video Category *</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Video Category *
+                </label>
                 <select
                   value={videoCategory}
                   onChange={(e) => setVideoCategory(e.target.value)}
@@ -3555,7 +3627,9 @@ console.log(thumbnailPreview,"thumbnailPreview")
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Description</label>
+                <label className="block text-sm text-gray-300 mb-1">
+                  Description
+                </label>
                 <textarea
                   value={videoDescription}
                   onChange={(e) => setVideoDescription(e.target.value)}
@@ -3573,7 +3647,10 @@ console.log(thumbnailPreview,"thumbnailPreview")
                     onChange={(e) => setEnableComments(e.target.checked)}
                     className="w-4 h-4 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="enableComments" className="text-sm text-gray-300">
+                  <label
+                    htmlFor="enableComments"
+                    className="text-sm text-gray-300"
+                  >
                     Enable comments
                   </label>
                 </div>
@@ -3588,7 +3665,8 @@ console.log(thumbnailPreview,"thumbnailPreview")
                     required
                   />
                   <label htmlFor="agreeTerms" className="text-xs text-gray-400">
-                    I agree to the Terms of Service and confirm I own/have rights to this content.
+                    I agree to the Terms of Service and confirm I own/have
+                    rights to this content.
                   </label>
                 </div>
               </div>
@@ -3619,4 +3697,4 @@ console.log(thumbnailPreview,"thumbnailPreview")
       )}
     </div>
   );
-}  
+}
