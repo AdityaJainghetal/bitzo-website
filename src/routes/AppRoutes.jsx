@@ -20,6 +20,7 @@ import YourVideosTab from "../pages/Settings/YourVideosTab";
 import WatchLaterTab from "../pages/Settings/WatchLaterTab";
 import ChannelPage from "../components/channels/ChannelPage";
 import ChannelCustomization from "../components/channels/ChannelCustomization";
+import Leaderboard from "../pages/Settings/Leaderboard";
 
 export default function AppRoutes() {
   return (
@@ -42,6 +43,7 @@ export default function AppRoutes() {
           <Route path="/liked-videos" element={<LikedVideosTab />} />
           <Route path="/watch-later" element={<WatchLaterTab />} />
           <Route path="/your-videos" element={<YourVideosTab />} />
+          <Route path ="/leaderboard" element={<Leaderboard/>} />
           <Route path="/withdraw" element={<WithdrawPage />} />
           <Route path="/channel/:id" element={<ChannelPage />} />
           <Route path="/channel/customize" element={<ChannelCustomization />} />

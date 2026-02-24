@@ -2,17 +2,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeft, ChevronDown } from "lucide-react";
 
-const API = "https://bitzo-server-2.onrender.com/api";
+const API = "http://localhost:8000/api";
 
 export default function UploadVideo() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState([]);
-  const [allSubCategories, setAllSubCategories] = useState([]);
-  const [filteredSubCategories, setFilteredSubCategories] = useState([]);
-
   const [category, setCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
   const [videoType, setVideoType] = useState("short"); // short or long
 
   const [videoFile, setVideoFile] = useState(null);
@@ -35,62 +31,12 @@ export default function UploadVideo() {
     fetchCategories();
   }, []);
 
-  // Fetch all subcategories (for subcategory → category sync)
-  useEffect(() => {
-    const fetchAllSubCategories = async () => {
-      try {
-        const res = await axios.get(`${API}/subcategory`); // adjust endpoint if needed
-        const subs = Array.isArray(res.data) ? res.data : [];
-        setAllSubCategories(subs);
-      } catch (error) {
-        console.error("All SubCategories fetch error", error);
-        setAllSubCategories([]);
-      }
-    };
-    fetchAllSubCategories();
-  }, []);
-
-  // Filter subcategories based on selected category
-  useEffect(() => {
-    if (!category) {
-      setFilteredSubCategories(allSubCategories);
-      return;
-    }
-
-    const filtered = allSubCategories.filter(
-      (sub) => sub.category === category || sub.category?._id === category,
-    );
-    setFilteredSubCategories(filtered);
-
-    // Clear subcategory if it no longer belongs to selected category
-    if (subCategory && !filtered.some((sub) => sub._id === subCategory)) {
-      setSubCategory("");
-    }
-  }, [category, allSubCategories, subCategory]);
-
-  // When user selects subcategory → auto select its parent category
-  const handleSubCategoryChange = (e) => {
-    const subId = e.target.value;
-    setSubCategory(subId);
-
-    if (subId) {
-      const selectedSub = allSubCategories.find((sub) => sub._id === subId);
-      if (selectedSub?.category) {
-        const parentId =
-          typeof selectedSub.category === "object"
-            ? selectedSub.category._id
-            : selectedSub.category;
-        setCategory(parentId);
-      }
-    }
-  };
-
   const generateVideoThumbnail = (file) => {
     return new Promise((resolve) => {
       const video = document.createElement("video");
       video.src = URL.createObjectURL(file);
       video.onloadedmetadata = () => {
-        video.currentTime = Math.min(1, video.duration / 4); // Get thumbnail at 1 second or 1/4 through video
+        video.currentTime = Math.min(1, video.duration / 4); // 1s or 1/4 duration
       };
       video.onseeked = () => {
         const canvas = document.createElement("canvas");
@@ -103,7 +49,7 @@ export default function UploadVideo() {
             resolve(blob);
           },
           "image/jpeg",
-          0.9,
+          0.9
         );
       };
     });
@@ -120,11 +66,10 @@ export default function UploadVideo() {
       formData.append("description", description);
       formData.append("category", category);
       formData.append("creator", userId);
-      if (subCategory) formData.append("subCategory", subCategory);
       formData.append("videoType", videoType); // short / long
       formData.append("video", videoFile);
 
-      // Generate thumbnail from video if not provided
+      // Generate thumbnail from video if user didn't upload one
       if (thumbnailFile) {
         formData.append("thumbnail", thumbnailFile);
       } else {
@@ -143,10 +88,10 @@ export default function UploadVideo() {
 
       alert("Video uploaded successfully ✅");
 
+      // Reset form
       setTitle("");
       setDescription("");
       setCategory("");
-      setSubCategory("");
       setVideoType("short");
       setVideoFile(null);
       setThumbnailFile(null);
@@ -175,7 +120,7 @@ export default function UploadVideo() {
             className="w-full px-4 py-3 bg-zinc-800 rounded-lg text-white outline-none focus:ring-2 focus:ring-red-600"
           />
 
-          {/* Short / Long Video Selection - FIRST after title */}
+          {/* Short / Long Video Selection */}
           <div className="flex gap-3">
             <button
               type="button"
@@ -221,27 +166,6 @@ export default function UploadVideo() {
               {categories.map((cat) => (
                 <option key={cat._id} value={cat._id}>
                   {cat.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
-            />
-          </div>
-
-          {/* SubCategory */}
-          <div className="relative">
-            <select
-              value={subCategory}
-              onChange={handleSubCategoryChange}
-              className="w-full px-4 py-3 bg-zinc-800 rounded-lg text-white appearance-none focus:ring-2 focus:ring-red-600"
-              disabled={allSubCategories.length === 0}
-            >
-              <option value="">Select SubCategory (optional)</option>
-              {filteredSubCategories.map((sub) => (
-                <option key={sub._id} value={sub._id}>
-                  {sub.name}
                 </option>
               ))}
             </select>

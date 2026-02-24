@@ -25,7 +25,7 @@ import {
 import { useRewards } from "../../context/RewardContext";
 import axios from "axios";
 
-const API_BASE_URL = "https://bitzo-server-2.onrender.com";
+const API_BASE_URL = "http://localhost:8000";
 
 export default function Navbar({ toggleSidebar }) {
   const { points } = useRewards();
@@ -357,7 +357,17 @@ export default function Navbar({ toggleSidebar }) {
                     <span>Withdraw Rewards</span>
                   </Link>
                 </div>
-
+                <Link
+                  to="/leaderboard"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    setIsSettingsOpen(false);
+                  }}
+                  className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition border-t border-gray-800 mt-1"
+                >
+                  <Wallet size={20} className="text-gray-300" />
+                  <span>Leadbaord Rewards</span>
+                </Link>
                 {/* Support & Info */}
                 <div className="py-1 border-t border-gray-800">
                   <button className="w-full px-5 py-3 text-left hover:bg-[#272727] flex items-center gap-4 transition">
